@@ -1,22 +1,36 @@
 'use client'
 
-import './globals.css';
+import './globals.css'
 
-import Link from 'next/link';
-import { Fragment, useState } from 'react';
+import Link from 'next/link'
+import { Fragment, useState } from 'react'
 
 import {
-    Dialog, DialogBackdrop, DialogPanel, Popover, PopoverButton, PopoverGroup, PopoverPanel, Tab,
-    TabGroup, TabList, TabPanel, TabPanels
-} from '@headlessui/react';
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  Popover,
+  PopoverButton,
+  PopoverGroup,
+  PopoverPanel,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+} from '@headlessui/react'
 import {
-    Bars3Icon, MagnifyingGlassIcon, QuestionMarkCircleIcon, ShoppingBagIcon, XMarkIcon
-} from '@heroicons/react/24/outline';
+  Bars3Icon,
+  MagnifyingGlassIcon,
+  QuestionMarkCircleIcon,
+  ShoppingBagIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline'
 
 const navigation = {
   categories: [
     {
-      name: 'Women',
+      name: 'Shop All',
       featured: [
         {
           name: 'New Arrivals',
@@ -52,46 +66,10 @@ const navigation = {
         },
       ],
     },
-    {
-      name: 'Men',
-      featured: [
-        {
-          name: 'New Arrivals',
-          href: '#',
-          imageSrc:
-            'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-01.jpg',
-          imageAlt:
-            'Hats and sweaters on wood shelves next to various colors of t-shirts on hangers.',
-        },
-        {
-          name: 'Basic Tees',
-          href: '#',
-          imageSrc:
-            'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-02.jpg',
-          imageAlt: 'Model wearing light heather gray t-shirt.',
-        },
-        {
-          name: 'Accessories',
-          href: '#',
-          imageSrc:
-            'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-03.jpg',
-          imageAlt:
-            'Grey 6-panel baseball hat with black brim, black mountain graphic on front, and light heather gray body.',
-        },
-        {
-          name: 'Carry',
-          href: '#',
-          imageSrc:
-            'https://tailwindcss.com/plus-assets/img/ecommerce-images/mega-menu-01-men-category-04.jpg',
-          imageAlt:
-            'Model putting folded cash into slim card holder olive leather wallet with hand stitching.',
-        },
-      ],
-    },
   ],
   pages: [
-    { name: 'Company', href: '#' },
-    { name: 'Stores', href: '#' },
+    { name: 'New In', href: '/collections/new-in' },
+    { name: 'Value Buy', href: '/collections/value-buy' },
   ],
 }
 
@@ -217,32 +195,32 @@ export default function RootLayout({
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                   {navigation.pages.map((page) => (
                     <div key={page.name} className="flow-root">
-                      <a
+                      <Link
                         href={page.href}
                         className="-m-2 block p-2 font-medium text-gray-900"
                       >
                         {page.name}
-                      </a>
+                      </Link>
                     </div>
                   ))}
                 </div>
 
                 <div className="space-y-6 border-t border-gray-200 px-4 py-6">
                   <div className="flow-root">
-                    <a
-                      href="#"
+                    <Link
+                      href="/sign-up"
                       className="-m-2 block p-2 font-medium text-gray-900"
                     >
                       Create an account
-                    </a>
+                    </Link>
                   </div>
                   <div className="flow-root">
-                    <a
-                      href="#"
+                    <Link
+                      href="/sign-in"
                       className="-m-2 block p-2 font-medium text-gray-900"
                     >
                       Sign in
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </DialogPanel>
@@ -338,13 +316,13 @@ export default function RootLayout({
                           ))}
 
                           {navigation.pages.map((page) => (
-                            <a
+                            <Link
                               key={page.name}
                               href={page.href}
                               className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                             >
                               {page.name}
-                            </a>
+                            </Link>
                           ))}
                         </div>
                       </PopoverGroup>
@@ -362,8 +340,8 @@ export default function RootLayout({
                       </button>
 
                       {/* Search */}
-                      <a
-                        href="#"
+                      <Link
+                        href="/search"
                         className="ml-2 p-2 text-gray-400 hover:text-gray-500"
                       >
                         <span className="sr-only">Search</span>
@@ -371,7 +349,7 @@ export default function RootLayout({
                           aria-hidden="true"
                           className="size-6"
                         />
-                      </a>
+                      </Link>
                     </div>
 
                     {/* Logo (lg-) */}
@@ -385,36 +363,36 @@ export default function RootLayout({
                     </Link>
 
                     <div className="flex flex-1 items-center justify-end">
-                      <a
-                        href="#"
+                      <Link
+                        href="/search"
                         className="hidden text-sm font-medium text-gray-700 hover:text-gray-800 lg:block"
                       >
                         Search
-                      </a>
+                      </Link>
 
                       <div className="flex items-center lg:ml-8">
-                        {/* Help */}
-                        <a
-                          href="#"
+                        {/* Live Chat */}
+                        <Link
+                          href="/live-chat"
                           className="p-2 text-gray-400 hover:text-gray-500 lg:hidden"
                         >
-                          <span className="sr-only">Help</span>
+                          <span className="sr-only">Live Chat</span>
                           <QuestionMarkCircleIcon
                             aria-hidden="true"
                             className="size-6"
                           />
-                        </a>
-                        <a
-                          href="#"
+                        </Link>
+                        <Link
+                          href="/live-chat"
                           className="hidden text-sm font-medium text-gray-700 hover:text-gray-800 lg:block"
                         >
-                          Help
-                        </a>
+                          Live Chat
+                        </Link>
 
                         {/* Cart */}
                         <div className="ml-4 flow-root lg:ml-8">
-                          <a
-                            href="#"
+                          <Link
+                            href="/cart"
                             className="group -m-2 flex items-center p-2"
                           >
                             <ShoppingBagIcon
@@ -427,7 +405,7 @@ export default function RootLayout({
                             <span className="sr-only">
                               items in cart, view bag
                             </span>
-                          </a>
+                          </Link>
                         </div>
                       </div>
                     </div>
