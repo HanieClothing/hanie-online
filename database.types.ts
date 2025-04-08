@@ -374,7 +374,9 @@ export type Database = {
           purchased_price: number
           selling_price: number
           colour: string
+          colour_hex: string
           size: string
+          size_description: string
           status_id: number
           quantity: number
         }[]
@@ -394,7 +396,7 @@ export type Database = {
         }[]
       }
       get_products_by_category: {
-        Args: { slug: string }
+        Args: { category_slug: string }
         Returns: {
           id: number
           code: string

@@ -355,7 +355,7 @@ export default function Category() {
             </h2>
 
             {products && products.length > 0 && (
-              <div className="grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">
+              <div className="grid gap-x-6 gap-y-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">
                 {products.map((product) => (
                   <a
                     key={product.id}
@@ -367,7 +367,7 @@ export default function Category() {
                       src={
                         'https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-01-image-card-03.jpg'
                       }
-                      className="aspect-square w-full rounded-lg object-cover group-hover:opacity-75 sm:aspect-2/3"
+                      className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75 sm:aspect-2/3"
                     />
                     <div className="mt-4 flex items-center justify-between text-base font-medium text-gray-900">
                       <h3>{product.name}</h3>
