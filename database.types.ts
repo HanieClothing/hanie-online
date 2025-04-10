@@ -14,6 +14,7 @@ export type Database = {
           created_at: string
           description: string | null
           id: number
+          image_url: string | null
           name: string
           slug: string | null
           updated_at: string
@@ -22,6 +23,7 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: number
+          image_url?: string | null
           name: string
           slug?: string | null
           updated_at?: string
@@ -30,8 +32,75 @@ export type Database = {
           created_at?: string
           description?: string | null
           id?: number
+          image_url?: string | null
           name?: string
           slug?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      collection_products: {
+        Row: {
+          collection_id: number
+          created_at: string
+          product_id: number
+          updated_at: string
+        }
+        Insert: {
+          collection_id: number
+          created_at?: string
+          product_id: number
+          updated_at?: string
+        }
+        Update: {
+          collection_id?: number
+          created_at?: string
+          product_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_products_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "collection_products_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          image_url: string | null
+          name: string
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          name: string
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          image_url?: string | null
+          name?: string
+          slug?: string
           updated_at?: string
         }
         Relationships: []
@@ -54,6 +123,99 @@ export type Database = {
         Update: {
           created_at?: string
           hex_code?: string | null
+          id?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      product_images: {
+        Row: {
+          colour_id: number
+          created_at: string
+          id: number
+          image_order: number
+          image_url: string
+          product_id: number
+          updated_at: string
+        }
+        Insert: {
+          colour_id: number
+          created_at?: string
+          id?: number
+          image_order?: number
+          image_url: string
+          product_id: number
+          updated_at?: string
+        }
+        Update: {
+          colour_id?: number
+          created_at?: string
+          id?: number
+          image_order?: number
+          image_url?: string
+          product_id?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_colour_id_fkey"
+            columns: ["colour_id"]
+            isOneToOne: false
+            referencedRelation: "colours"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      product_statuses: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      product_unit_statuses: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
           id?: number
           name?: string
           updated_at?: string
@@ -94,7 +256,7 @@ export type Database = {
             foreignKeyName: "product_units_status_id_fkey"
             columns: ["status_id"]
             isOneToOne: false
-            referencedRelation: "statuses"
+            referencedRelation: "product_unit_statuses"
             referencedColumns: ["id"]
           },
         ]
@@ -158,6 +320,7 @@ export type Database = {
           name: string
           purchased_price: number
           selling_price: number
+          status_id: number | null
           subcategory_id: number | null
           supplier_id: number | null
           updated_at: string
@@ -171,6 +334,7 @@ export type Database = {
           name: string
           purchased_price: number
           selling_price: number
+          status_id?: number | null
           subcategory_id?: number | null
           supplier_id?: number | null
           updated_at?: string
@@ -184,6 +348,7 @@ export type Database = {
           name?: string
           purchased_price?: number
           selling_price?: number
+          status_id?: number | null
           subcategory_id?: number | null
           supplier_id?: number | null
           updated_at?: string
@@ -194,6 +359,13 @@ export type Database = {
             columns: ["category_id"]
             isOneToOne: false
             referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_status_id_fkey"
+            columns: ["status_id"]
+            isOneToOne: false
+            referencedRelation: "product_statuses"
             referencedColumns: ["id"]
           },
           {
@@ -262,30 +434,6 @@ export type Database = {
           id?: number
           name?: string
           sort_order?: number | null
-          updated_at?: string
-        }
-        Relationships: []
-      }
-      statuses: {
-        Row: {
-          created_at: string
-          description: string | null
-          id: number
-          name: string
-          updated_at: string
-        }
-        Insert: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name: string
-          updated_at?: string
-        }
-        Update: {
-          created_at?: string
-          description?: string | null
-          id?: number
-          name?: string
           updated_at?: string
         }
         Relationships: []
@@ -375,6 +523,7 @@ export type Database = {
           selling_price: number
           colour: string
           colour_hex: string
+          images: string[]
           size: string
           size_description: string
           status_id: number
@@ -404,9 +553,12 @@ export type Database = {
           name: string
           purchased_price: number
           selling_price: number
+          image_url: string
           quantity: number
           available_colours: string[]
           available_sizes: string[]
+          status_id: number
+          status: string
         }[]
       }
     }

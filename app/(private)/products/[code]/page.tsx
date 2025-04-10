@@ -8,29 +8,6 @@ import { formatToRM } from '@/utils/currency'
 import { createClient } from '@/utils/supabase/client'
 import { Radio, RadioGroup } from '@headlessui/react'
 
-const productImages = [
-  {
-    id: 1,
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-featured-product-shot.jpg',
-    imageAlt: "Back of women's Basic Tee in black.",
-    primary: true,
-  },
-  {
-    id: 2,
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-product-shot-01.jpg',
-    imageAlt: "Side profile of women's Basic Tee in black.",
-    primary: false,
-  },
-  {
-    id: 3,
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-product-shot-02.jpg',
-    imageAlt: "Front of women's Basic Tee in black.",
-    primary: false,
-  },
-]
 const relatedProducts = [
   {
     id: 1,
@@ -59,6 +36,7 @@ export default function Product() {
       const { data, error } = await supabase.rpc('get_product_by_code', {
         product_code: code.toString(),
       })
+      console.log(data)
 
       if (error) {
         console.error('Error fetching product: ', error)
@@ -70,6 +48,7 @@ export default function Product() {
       const base = data[0]
       const colourMap = new Map<string, ProductColour>()
       const sizeMap = new Map<string, ProductSize>()
+      const images: Record<string, string[]> = {}
 
       data.forEach((item) => {
         if (!colourMap.has(item.colour)) {
@@ -87,6 +66,25 @@ export default function Product() {
         }
       })
 
+      const variants = data.map((item) => ({
+        colour: item.colour,
+        colourHex: item.colour_hex,
+        size: item.size,
+        sizeDescription: item.size_description,
+        quantity: item.quantity,
+      }))
+      const availableColours = Array.from(colourMap.values())
+      const availableSizes = Array.from(sizeMap.values())
+
+      availableColours.forEach((colour) => {
+        const productImages = data.find(
+          (item) => item.colour === colour.name
+        )?.images
+        if (!productImages) return
+
+        images[colour.name] = productImages
+      })
+
       const transformed: TransformedProduct = {
         code: base.code,
         name: base.name,
@@ -96,18 +94,14 @@ export default function Product() {
         purchased_price: base.purchased_price,
         selling_price: base.selling_price,
         status_id: base.status_id,
-        variants: data.map((item) => ({
-          colour: item.colour,
-          colourHex: item.colour_hex,
-          size: item.size,
-          sizeDescription: item.size_description,
-          quantity: item.quantity,
-        })),
-        availableColours: Array.from(colourMap.values()),
-        availableSizes: Array.from(sizeMap.values()),
+        variants,
+        availableColours,
+        availableSizes,
+        images,
       }
 
       setProduct(transformed)
+      setSelectedColour(transformed.availableColours[0].name)
     }
 
     fetchProduct()
@@ -117,9 +111,9 @@ export default function Product() {
     <div className="bg-white">
       <main className="mx-auto mt-8 max-w-2xl px-4 pb-16 sm:px-6 sm:pb-24 lg:max-w-7xl lg:px-8">
         <div className="lg:grid lg:auto-rows-min lg:grid-cols-12 lg:gap-x-8">
-          <div className="lg:col-span-5 lg:col-start-8">
+          <div className="lg:col-span-6 lg:col-start-7">
             <div className="flex justify-between">
-              <h1 className="text-xl font-medium text-gray-900">
+              <h1 className="text-[30px] font-medium text-gray-900">
                 {product?.name}
               </h1>
               <p className="text-xl font-medium text-gray-900">
@@ -129,27 +123,29 @@ export default function Product() {
           </div>
 
           {/* Image gallery */}
-          <div className="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
+          <div className="mt-8 lg:col-span-6 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
             <h2 className="sr-only">Images</h2>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
-              {productImages.map((image) => (
-                <img
-                  key={image.id}
-                  alt={image.imageAlt}
-                  src={image.imageSrc}
-                  className={cn(
-                    image.primary
-                      ? 'lg:col-span-2 lg:row-span-2'
-                      : 'hidden lg:block',
-                    'rounded-lg'
-                  )}
-                />
-              ))}
-            </div>
+            {product && product.images && (
+              <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
+                {product.images[selectedColour].map((image, index) => (
+                  <img
+                    key={index}
+                    alt="product image alt"
+                    src={image}
+                    className={cn(
+                      index === 0
+                        ? 'lg:col-span-2 lg:row-span-2'
+                        : 'hidden lg:block',
+                      'rounded-lg'
+                    )}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
-          <div className="mt-8 lg:col-span-5">
+          <div className="mt-8 lg:col-span-6">
             <form>
               {/* Colour picker */}
               <div>
@@ -195,7 +191,7 @@ export default function Product() {
                   <h2 className="text-sm font-medium text-gray-900">Size</h2>
                   <a
                     href="#"
-                    className="text-sm font-medium text-indigo-600 hover:text-indigo-500"
+                    className="text-sm font-medium text-black hover:text-black/70"
                   >
                     See sizing chart
                   </a>
@@ -227,7 +223,7 @@ export default function Product() {
 
               <button
                 type="submit"
-                className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-8 py-3 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >
                 Add to cart
               </button>

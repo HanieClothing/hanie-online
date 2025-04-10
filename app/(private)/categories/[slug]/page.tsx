@@ -67,12 +67,14 @@ export default function Category() {
   const [products, setProducts] = useState<Product[] | null>(null)
 
   useEffect(() => {
+    if (!slug) return
+
     const fetchCategoryBySlug = async () => {
       const supabase = await createClient()
       const { data, error } = await supabase
         .from('categories')
         .select('*')
-        .eq('slug', slug)
+        .eq('slug', slug.toString())
         .single()
 
       if (error) {
@@ -89,12 +91,12 @@ export default function Category() {
   }, [])
 
   useEffect(() => {
-    if (!category) return
+    if (!category || !slug) return
 
     const fetchProductsByCategory = async () => {
       const supabase = await createClient()
       const { data, error } = await supabase.rpc('get_products_by_category', {
-        category_slug: slug,
+        category_slug: slug.toString(),
       })
 
       if (error) {
@@ -111,7 +113,7 @@ export default function Category() {
   }, [category])
 
   return (
-    <div className="bg-gray-50">
+    <div>
       {/* Mobile filter dialog */}
       <Dialog
         open={mobileFiltersOpen}
@@ -364,31 +366,12 @@ export default function Category() {
                   >
                     <img
                       alt={'Product image'}
-                      src={
-                        'https://tailwindcss.com/plus-assets/img/ecommerce-images/category-page-01-image-card-03.jpg'
-                      }
+                      src={product.image_url}
                       className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75 sm:aspect-2/3"
                     />
                     <div className="mt-4 flex items-center justify-between text-base font-medium text-gray-900">
                       <h3>{product.name}</h3>
                       <p>{formatToRM(product.selling_price)}</p>
-                    </div>
-                    <div>
-                      <h4 className="sr-only">Available sizes</h4>
-                      <ul
-                        role="list"
-                        className="flex items-center justify-start space-x-1 pt-2"
-                      >
-                        {product.available_sizes.map((size, index) => (
-                          <li
-                            key={size}
-                            className="space-x-1 text-gray-500 italic text-sm"
-                          >
-                            {index !== 0 && <span>/</span>}
-                            <span>{size}</span>
-                          </li>
-                        ))}
-                      </ul>
                     </div>
                     <div>
                       <h4 className="sr-only">Available colours</h4>
@@ -403,6 +386,19 @@ export default function Category() {
                             className="size-4 rounded-full border border-black/10"
                           >
                             <span className="sr-only">{colour}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <div>
+                      <h4 className="sr-only">Available sizes</h4>
+                      <ul
+                        role="list"
+                        className="flex items-center justify-start space-x-2 pt-2"
+                      >
+                        {product.available_sizes.map((size) => (
+                          <li key={size} className="text-gray-500 text-sm">
+                            <span>{size}</span>
                           </li>
                         ))}
                       </ul>

@@ -120,7 +120,7 @@ export default function Cart() {
                             id={`quantity-${productIdx}`}
                             name={`quantity-${productIdx}`}
                             aria-label={`Quantity, ${product.name}`}
-                            className="col-start-1 row-start-1 appearance-none rounded-md bg-white py-1.5 pr-8 pl-3 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600 sm:text-sm/6"
+                            className="col-start-1 row-start-1 appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6"
                           >
                             <option value={1}>1</option>
                             <option value={2}>2</option>
@@ -241,7 +241,7 @@ export default function Cart() {
             <div className="mt-6">
               <button
                 type="submit"
-                className="w-full rounded-md border border-transparent bg-indigo-600 px-4 py-3 text-base font-medium text-white shadow-xs hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-hidden"
+                className="w-full rounded-md border border-transparent bg-black px-4 py-3 text-base font-medium text-white shadow-xs hover:bg-black/70 focus:ring-2 focus:ring-black focus:ring-offset-2 focus:ring-offset-gray-50 focus:outline-hidden"
               >
                 Checkout
               </button>

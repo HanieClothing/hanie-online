@@ -18,6 +18,7 @@ export type Product = {
   quantity: number
   available_colours: string[]
   available_sizes: string[]
+  image_url: string
 }
 
 export type ProductVariant = {
@@ -56,4 +57,5 @@ export type TransformedProduct = {
   variants: ProductVariant[]
   availableColours: ProductColour[]
   availableSizes: ProductSize[]
+  images: Record<string, string[]>
 }
