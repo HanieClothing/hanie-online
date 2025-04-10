@@ -36,7 +36,6 @@ export default function Product() {
       const { data, error } = await supabase.rpc('get_product_by_code', {
         product_code: code.toString(),
       })
-      console.log(data)
 
       if (error) {
         console.error('Error fetching product: ', error)
@@ -67,6 +66,7 @@ export default function Product() {
       })
 
       const variants = data.map((item) => ({
+        id: item.product_variant_id,
         colour: item.colour,
         colourHex: item.colour_hex,
         size: item.size,
@@ -106,6 +106,38 @@ export default function Product() {
 
     fetchProduct()
   }, [code])
+
+  const addToCart: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
+    e.preventDefault()
+
+    if (!selectedColour) {
+      alert('Please select a colour.')
+      return
+    }
+
+    if (!selectedSize) {
+      alert('Please select a size.')
+      return
+    }
+
+    const supabase = await createClient()
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+
+    if (!user || !product) return
+
+    const productVariant = product.variants.find(
+      (variant) =>
+        variant.colour === selectedColour && variant.size === selectedSize
+    )
+    if (!productVariant) return
+
+    await supabase.rpc('add_to_cart', {
+      user_id: user.id,
+      product_variant_id: productVariant.id,
+    })
+  }
 
   return (
     <div className="bg-white">
@@ -222,6 +254,7 @@ export default function Product() {
               </div>
 
               <button
+                onClick={addToCart}
                 type="submit"
                 className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               >

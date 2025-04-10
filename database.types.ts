@@ -9,6 +9,77 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      cart_items: {
+        Row: {
+          cart_id: number
+          created_at: string
+          id: number
+          product_variant_id: number
+          quantity: number
+          updated_at: string
+        }
+        Insert: {
+          cart_id: number
+          created_at?: string
+          id?: number
+          product_variant_id: number
+          quantity?: number
+          updated_at?: string
+        }
+        Update: {
+          cart_id?: number
+          created_at?: string
+          id?: number
+          product_variant_id?: number
+          quantity?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cart_items_cart_id_fkey"
+            columns: ["cart_id"]
+            isOneToOne: false
+            referencedRelation: "carts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cart_items_product_variant_id_fkey"
+            columns: ["product_variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      carts: {
+        Row: {
+          created_at: string
+          id: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "carts_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: true
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       categories: {
         Row: {
           created_at: string
@@ -511,6 +582,27 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      add_to_cart: {
+        Args: { user_id: string; product_variant_id: number }
+        Returns: undefined
+      }
+      get_cart_items: {
+        Args: { user_id: string }
+        Returns: {
+          id: number
+          image_url: string
+          name: string
+          selling_price: number
+          status: string
+          quantity: number
+          colour: string
+          size: string
+        }[]
+      }
+      get_cart_size: {
+        Args: { user_id: string }
+        Returns: number
+      }
       get_product_by_code: {
         Args: { product_code: string }
         Returns: {
@@ -521,6 +613,7 @@ export type Database = {
           description: string
           purchased_price: number
           selling_price: number
+          product_variant_id: number
           colour: string
           colour_hex: string
           images: string[]

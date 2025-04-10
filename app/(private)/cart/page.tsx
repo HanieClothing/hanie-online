@@ -1,5 +1,7 @@
 'use client'
 
+import { useCart } from '@/hooks/cart'
+import { formatToRM } from '@/utils/currency'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import {
   CheckIcon,
@@ -61,6 +63,9 @@ const relatedProducts = [
 ]
 
 export default function Cart() {
+  const { cartItems, subtotal, shippingEstimate, taxEstimate, orderTotal } =
+    useCart()
+
   return (
     <div className="bg-white">
       <main className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -78,12 +83,12 @@ export default function Cart() {
               role="list"
               className="divide-y divide-gray-200 border-t border-b border-gray-200"
             >
-              {products.map((product, productIdx) => (
-                <li key={product.id} className="flex py-6 sm:py-10">
+              {cartItems.map((item, index) => (
+                <li key={item.id} className="flex py-6 sm:py-10">
                   <div className="shrink-0">
                     <img
-                      alt={product.imageAlt}
-                      src={product.imageSrc}
+                      alt={item.name}
+                      src={item.image_url}
                       className="size-24 rounded-md object-cover sm:size-48"
                     />
                   </div>
@@ -94,33 +99,34 @@ export default function Cart() {
                         <div className="flex justify-between">
                           <h3 className="text-sm">
                             <a
-                              href={product.href}
+                              href="#"
                               className="font-medium text-gray-700 hover:text-gray-800"
                             >
-                              {product.name}
+                              {item.name}
                             </a>
                           </h3>
                         </div>
                         <div className="mt-1 flex text-sm">
-                          <p className="text-gray-500">{product.color}</p>
-                          {product.size ? (
+                          <p className="text-gray-500">{item.colour}</p>
+                          {item.size ? (
                             <p className="ml-4 border-l border-gray-200 pl-4 text-gray-500">
-                              {product.size}
+                              {item.size}
                             </p>
                           ) : null}
                         </div>
                         <p className="mt-1 text-sm font-medium text-gray-900">
-                          {product.price}
+                          {formatToRM(item.selling_price)}
                         </p>
                       </div>
 
                       <div className="mt-4 sm:mt-0 sm:pr-9">
                         <div className="inline-grid w-full max-w-16 grid-cols-1">
                           <select
-                            id={`quantity-${productIdx}`}
-                            name={`quantity-${productIdx}`}
-                            aria-label={`Quantity, ${product.name}`}
+                            id={`quantity-${index}`}
+                            name={`quantity-${index}`}
+                            aria-label={`Quantity, ${item.name}`}
                             className="col-start-1 row-start-1 appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6"
+                            value={item.quantity}
                           >
                             <option value={1}>1</option>
                             <option value={2}>2</option>
@@ -153,7 +159,7 @@ export default function Cart() {
                     </div>
 
                     <p className="mt-4 flex space-x-2 text-sm text-gray-700">
-                      {product.inStock ? (
+                      {item.status === 'Active' ? (
                         <CheckIcon
                           aria-hidden="true"
                           className="size-5 shrink-0 text-green-500"
@@ -166,9 +172,9 @@ export default function Cart() {
                       )}
 
                       <span>
-                        {product.inStock
+                        {item.status === 'Active'
                           ? 'In stock'
-                          : `Ships in ${product.leadTime}`}
+                          : `Ships in 3-4 weeks`}
                       </span>
                     </p>
                   </div>
@@ -192,7 +198,9 @@ export default function Cart() {
             <dl className="mt-6 space-y-4">
               <div className="flex items-center justify-between">
                 <dt className="text-sm text-gray-600">Subtotal</dt>
-                <dd className="text-sm font-medium text-gray-900">$99.00</dd>
+                <dd className="text-sm font-medium text-gray-900">
+                  {formatToRM(subtotal)}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="flex items-center text-sm text-gray-600">
@@ -210,7 +218,9 @@ export default function Cart() {
                     />
                   </a>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">$5.00</dd>
+                <dd className="text-sm font-medium text-gray-900">
+                  {formatToRM(shippingEstimate)}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="flex text-sm text-gray-600">
@@ -228,13 +238,17 @@ export default function Cart() {
                     />
                   </a>
                 </dt>
-                <dd className="text-sm font-medium text-gray-900">$8.32</dd>
+                <dd className="text-sm font-medium text-gray-900">
+                  {formatToRM(taxEstimate)}
+                </dd>
               </div>
               <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                 <dt className="text-base font-medium text-gray-900">
                   Order total
                 </dt>
-                <dd className="text-base font-medium text-gray-900">$112.32</dd>
+                <dd className="text-base font-medium text-gray-900">
+                  {formatToRM(orderTotal)}
+                </dd>
               </div>
             </dl>
 

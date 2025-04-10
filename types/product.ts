@@ -22,6 +22,7 @@ export type Product = {
 }
 
 export type ProductVariant = {
+  id: number
   colour: string
   colourHex: string
   size: string
