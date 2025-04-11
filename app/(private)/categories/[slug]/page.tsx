@@ -1,30 +1,18 @@
 'use client'
 
-import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { Tables } from '@/database.types'
-import { Product } from '@/types/product'
-import { formatToRM } from '@/utils/currency'
-import { createClient } from '@/utils/supabase/client'
+import { Tables } from '@/types/database';
+import { Product } from '@/types/product';
+import { formatToRM } from '@/utils/currency';
+import { createClient } from '@/utils/supabase/client';
 import {
-  Dialog,
-  DialogBackdrop,
-  DialogPanel,
-  Disclosure,
-  DisclosureButton,
-  DisclosurePanel,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-  Popover,
-  PopoverButton,
-  PopoverGroup,
-  PopoverPanel,
-} from '@headlessui/react'
-import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+    Dialog, DialogBackdrop, DialogPanel, Disclosure, DisclosureButton, DisclosurePanel, Menu,
+    MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverGroup, PopoverPanel
+} from '@headlessui/react';
+import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { XMarkIcon } from '@heroicons/react/24/outline';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#' },

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
-import { Tables } from '@/database.types';
 import { fetchCategories } from '@/lib/categories';
+import { Tables } from '@/types/database';
 
 export const useCategories = () => {
   const [categories, setCategories] = useState<Tables<'categories'>[]>([])

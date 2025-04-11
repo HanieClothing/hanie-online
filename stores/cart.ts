@@ -3,7 +3,7 @@ import { create } from 'zustand';
 import { deleteCartItem, getCartItems } from '@/lib/cart';
 import { CartItem } from '@/types/cart';
 
-import { useLoading } from './loading';
+import { useLoadingStore } from './loading';
 
 type CartState = {
   cartItems: CartItem[]
@@ -16,7 +16,7 @@ type CartState = {
   deleteItem: (id: number) => Promise<void>
 }
 
-export const useCart = create<CartState>((set, get) => ({
+export const useCartStore = create<CartState>((set, get) => ({
   cartItems: [],
   isLoading: false,
   error: null,
@@ -26,7 +26,7 @@ export const useCart = create<CartState>((set, get) => ({
   orderTotal: 0,
 
   fetchCart: async () => {
-    const setIsLoading = useLoading.getState().setIsLoading
+    const setIsLoading = useLoadingStore.getState().setIsLoading
 
     setIsLoading(true)
     set({ error: null })
