@@ -3,10 +3,11 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { getCategoryBySlug } from '@/lib/categories';
 import { Tables } from '@/types/database';
 import { Product } from '@/types/product';
 import { formatToRM } from '@/utils/currency';
-import { createClient } from '@/utils/supabase/client';
+import { supabase } from '@/utils/supabase/client';
 import {
     Dialog, DialogBackdrop, DialogPanel, Disclosure, DisclosureButton, DisclosurePanel, Menu,
     MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverGroup, PopoverPanel
@@ -58,17 +59,7 @@ export default function Category() {
     if (!slug) return
 
     const fetchCategoryBySlug = async () => {
-      const supabase = await createClient()
-      const { data, error } = await supabase
-        .from('categories')
-        .select('*')
-        .eq('slug', slug.toString())
-        .single()
-
-      if (error) {
-        console.error('Error fetching categories: ', error)
-        return
-      }
+      const data = await getCategoryBySlug(slug.toString())
 
       if (data) {
         setCategory(data)
@@ -82,7 +73,6 @@ export default function Category() {
     if (!category || !slug) return
 
     const fetchProductsByCategory = async () => {
-      const supabase = await createClient()
       const { data, error } = await supabase.rpc('get_products_by_category', {
         category_slug: slug.toString(),
       })

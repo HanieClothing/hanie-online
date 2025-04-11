@@ -1,5 +1,5 @@
 'use client'
-import { useCart } from '@/hooks/cart';
+import { useCartStore } from '@/stores/cart';
 import { formatToRM } from '@/utils/currency';
 import { ChevronDownIcon } from '@heroicons/react/16/solid';
 import {
@@ -28,7 +28,7 @@ export default function Cart() {
     taxEstimate,
     orderTotal,
     deleteCartItem,
-  } = useCart()
+  } = useCartStore()
 
   const handleDelete = async (id: number) => {
     try {
@@ -55,7 +55,7 @@ export default function Cart() {
               role="list"
               className="divide-y divide-gray-200 border-t border-b border-gray-200"
             >
-              {cartItems.map((item, index) => (
+              {cartItems?.map((item, index) => (
                 <li key={item.id} className="flex py-6 sm:py-10">
                   <div className="shrink-0">
                     <img

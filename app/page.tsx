@@ -1,7 +1,7 @@
 'use client'
-import Link from 'next/link'
+import Link from 'next/link';
 
-import { useCategories } from '@/hooks/categories'
+import { useCategoryStore } from '@/stores/category';
 
 const collections = [
   {
@@ -37,7 +37,7 @@ const collections = [
 ]
 
 export default function Home() {
-  const { categories } = useCategories()
+  const { categories } = useCategoryStore()
 
   return (
     <div className="bg-white">
@@ -76,7 +76,7 @@ export default function Home() {
 
       <main>
         {/* Categories section */}
-        {categories.length > 0 && (
+        {categories && categories.length > 0 && (
           <section
             aria-labelledby="category-heading"
             className="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8"

@@ -1,13 +1,22 @@
-import { createClient } from '@/utils/supabase/client'
+import { handleError } from '@/utils/error';
+import { supabase } from '@/utils/supabase/client';
 
-export const fetchCategories = async () => {
-  const supabase = await createClient()
+export const getCategories = async () => {
   const { data, error } = await supabase.from('categories').select('*')
 
-  if (error) {
-    console.error('Error fetching categories: ', error)
-    throw error
-  }
+  if (error) handleError(error, 'getCategories')
+
+  return data
+}
+
+export const getCategoryBySlug = async (slug: string) => {
+  const { data, error } = await supabase
+    .from('categories')
+    .select('*')
+    .eq('slug', slug)
+    .single()
+
+  if (error) handleError(error, `getCategoryBySlug (slug: ${slug})`)
 
   return data
 }

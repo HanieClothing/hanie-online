@@ -1,38 +1,39 @@
 import { create } from 'zustand';
 
-import { deleteCartItem, getCartItems } from '@/lib/cart';
+import { addCartItem, deleteCartItem, getCartItems } from '@/lib/cart';
 import { CartItem } from '@/types/cart';
 
 import { useLoadingStore } from './loading';
 
 type CartState = {
-  cartItems: CartItem[]
-  error: string | null
+  cartItems: CartItem[] | null
   subtotal: number
   shippingEstimate: number
   taxEstimate: number
   orderTotal: number
-  fetchCart: () => Promise<void>
-  deleteItem: (id: number) => Promise<void>
+  fetchCartItems: () => Promise<void>
+  addCartItem: (productVariantId: number) => Promise<void>
+  deleteCartItem: (id: number) => Promise<void>
 }
 
 export const useCartStore = create<CartState>((set, get) => ({
-  cartItems: [],
-  isLoading: false,
-  error: null,
+  cartItems: null,
   subtotal: 0,
   shippingEstimate: 0,
   taxEstimate: 0,
   orderTotal: 0,
 
-  fetchCart: async () => {
-    const setIsLoading = useLoadingStore.getState().setIsLoading
+  fetchCartItems: async () => {
+    const { setIsLoading } = useLoadingStore.getState()
 
     setIsLoading(true)
-    set({ error: null })
 
     try {
       const items = await getCartItems()
+      console.log(items)
+
+      if (!items) return
+
       const subtotal = items.reduce(
         (total, item) => total + item.selling_price,
         0
@@ -48,15 +49,22 @@ export const useCartStore = create<CartState>((set, get) => ({
         shippingEstimate: shipping,
         orderTotal,
       })
-    } catch (error: any) {
-      set({ error: error.message })
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
     } finally {
       setIsLoading(false)
     }
   },
 
-  deleteItem: async (id: number) => {
+  addCartItem: async (productVariantId: number) => {
+    await addCartItem(productVariantId)
+    await get().fetchCartItems()
+  },
+
+  deleteCartItem: async (id: number) => {
     await deleteCartItem(id)
-    await get().fetchCart()
+    await get().fetchCartItems()
   },
 }))

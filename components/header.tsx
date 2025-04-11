@@ -3,8 +3,8 @@
 import Link from 'next/link';
 import { Fragment, useState } from 'react';
 
-import { useCartSize } from '@/hooks/cart';
-import { useCategories } from '@/hooks/categories';
+import { useCartStore } from '@/stores/cart';
+import { useCategoryStore } from '@/stores/category';
 import {
     Dialog, DialogBackdrop, DialogPanel, Popover, PopoverButton, PopoverGroup, PopoverPanel, Tab,
     TabGroup, TabList, TabPanel, TabPanels
@@ -19,8 +19,8 @@ const pages = [
 ]
 
 function Header() {
-  const { cartSize } = useCartSize()
-  const { categories } = useCategories()
+  const { cartItems } = useCartStore()
+  const { categories } = useCategoryStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -64,7 +64,7 @@ function Header() {
               <TabPanels as={Fragment}>
                 <TabPanel className="space-y-12 px-4 py-6">
                   <div className="grid grid-cols-2 gap-x-4 gap-y-10">
-                    {categories.map((category) => (
+                    {categories?.map((category) => (
                       <div key={category.id} className="group relative">
                         {category.image_url && (
                           <img
@@ -174,7 +174,7 @@ function Header() {
                           <div className="relative bg-white">
                             <div className="mx-auto max-w-7xl px-4 sm:px-6 lh:px-8">
                               <div className="grid grid-cols-4 gap-x-8 gap-y-10 py-16">
-                                {categories.map((category) => (
+                                {categories?.map((category) => (
                                   <div
                                     key={category.id}
                                     className="group relative"
@@ -287,7 +287,7 @@ function Header() {
                           className="size-6 shrink-0 text-gray-400 group-hover:text-gray-500"
                         />
                         <span className="ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800">
-                          {cartSize}
+                          {cartItems?.length ?? 0}
                         </span>
                         <span className="sr-only">items in cart, view bag</span>
                       </Link>

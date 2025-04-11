@@ -2,10 +2,11 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
+import { useCartStore } from '@/stores/cart';
 import { ProductColour, ProductSize, TransformedProduct } from '@/types/product';
 import { cn } from '@/utils/cn';
 import { formatToRM } from '@/utils/currency';
-import { createClient } from '@/utils/supabase/client';
+import { supabase } from '@/utils/supabase/client';
 import { Radio, RadioGroup } from '@headlessui/react';
 
 const relatedProducts = [
@@ -24,6 +25,7 @@ const relatedProducts = [
 
 export default function Product() {
   const { code } = useParams()
+  const { addCartItem } = useCartStore()
   const [product, setProduct] = useState<TransformedProduct | null>(null)
   const [selectedColour, setSelectedColour] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
@@ -32,7 +34,6 @@ export default function Product() {
     if (!code) return
 
     const fetchProduct = async () => {
-      const supabase = await createClient()
       const { data, error } = await supabase.rpc('get_product_by_code', {
         product_code: code.toString(),
       })
@@ -120,12 +121,7 @@ export default function Product() {
       return
     }
 
-    const supabase = await createClient()
-    const {
-      data: { user },
-    } = await supabase.auth.getUser()
-
-    if (!user || !product) return
+    if (!product) return
 
     const productVariant = product.variants.find(
       (variant) =>
@@ -133,10 +129,7 @@ export default function Product() {
     )
     if (!productVariant) return
 
-    await supabase.rpc('add_to_cart', {
-      user_id: user.id,
-      product_variant_id: productVariant.id,
-    })
+    await addCartItem(productVariant.id)
   }
 
   return (

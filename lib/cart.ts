@@ -1,50 +1,28 @@
-import { createClient } from '@/utils/supabase/client';
+import { handleError } from '@/utils/error';
+import { supabase } from '@/utils/supabase/client';
 
-export const getCartSize = async () => {
-  const supabase = await createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+export const getCartItems = async () => {
+  const { data, error } = await supabase.rpc('get_cart_items')
+  console.log(data)
 
-  if (!user) {
-    console.error('No active user.')
-    return
-  }
-
-  const { data, error } = await supabase.rpc('get_cart_size', {
-    user_id: user.id,
-  })
-
-  if (error) {
-    console.error('Error fetching categories: ', error)
-    throw error
-  }
+  if (error) handleError(error, 'getCartItems')
 
   return data
 }
 
-export const getCartItems = async () => {
-  const supabase = await createClient()
+export const addCartItem = async (productVariantId: number) => {
+  const { error } = await supabase.rpc('add_cart_item', {
+    product_variant_id: productVariantId,
+  })
 
-  const { data, error } = await supabase.rpc('get_cart_items')
-
-  if (error) {
-    console.error('Error fetching cart items: ', error)
-    throw error
-  }
-
-  return data
+  if (error)
+    handleError(error, `addCartItem (productVariantId: ${productVariantId})`)
 }
 
 export const deleteCartItem = async (cartItemId: number) => {
-  const supabase = await createClient()
-
   const { error } = await supabase.rpc('delete_cart_item', {
     cart_item_id: cartItemId,
   })
 
-  if (error) {
-    console.error('Error deleting cart item: ', error)
-    throw error
-  }
+  if (error) handleError(error, `deleteCartItem (cartItemId: ${cartItemId})`)
 }
