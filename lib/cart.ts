@@ -3,7 +3,6 @@ import { supabase } from '@/utils/supabase/client';
 
 export const getCartItems = async () => {
   const { data, error } = await supabase.rpc('get_cart_items')
-  console.log(data)
 
   if (error) handleError(error, 'getCartItems')
 

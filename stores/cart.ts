@@ -30,7 +30,6 @@ export const useCartStore = create<CartState>((set, get) => ({
 
     try {
       const items = await getCartItems()
-      console.log(items)
 
       if (!items) return
 
