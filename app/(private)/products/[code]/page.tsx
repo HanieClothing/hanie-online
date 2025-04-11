@@ -1,12 +1,12 @@
 'use client'
-import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
-import { cn } from '@/lib/utils'
-import { ProductColour, ProductSize, TransformedProduct } from '@/types/product'
-import { formatToRM } from '@/utils/currency'
-import { createClient } from '@/utils/supabase/client'
-import { Radio, RadioGroup } from '@headlessui/react'
+import { ProductColour, ProductSize, TransformedProduct } from '@/types/product';
+import { cn } from '@/utils/cn';
+import { formatToRM } from '@/utils/currency';
+import { createClient } from '@/utils/supabase/client';
+import { Radio, RadioGroup } from '@headlessui/react';
 
 const relatedProducts = [
   {

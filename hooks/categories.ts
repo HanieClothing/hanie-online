@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
-import { Tables } from '@/database.types'
-import { fetchCategories } from '@/lib/supabase/categories'
+import { Tables } from '@/database.types';
+import { fetchCategories } from '@/lib/categories';
 
 export const useCategories = () => {
   const [categories, setCategories] = useState<Tables<'categories'>[]>([])

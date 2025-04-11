@@ -1,53 +1,11 @@
 'use client'
-
-import { useCart } from '@/hooks/cart'
-import { formatToRM } from '@/utils/currency'
-import { ChevronDownIcon } from '@heroicons/react/16/solid'
+import { useCart } from '@/hooks/cart';
+import { formatToRM } from '@/utils/currency';
+import { ChevronDownIcon } from '@heroicons/react/16/solid';
 import {
-  CheckIcon,
-  ClockIcon,
-  QuestionMarkCircleIcon,
-  XMarkIcon as XMarkIconMini,
-} from '@heroicons/react/20/solid'
+    CheckIcon, ClockIcon, QuestionMarkCircleIcon, XMarkIcon as XMarkIconMini
+} from '@heroicons/react/20/solid';
 
-const products = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: 'Sienna',
-    inStock: true,
-    size: 'Large',
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-01-product-01.jpg',
-    imageAlt: "Front of men's Basic Tee in sienna.",
-  },
-  {
-    id: 2,
-    name: 'Basic Tee',
-    href: '#',
-    price: '$32.00',
-    color: 'Black',
-    inStock: false,
-    leadTime: '3–4 weeks',
-    size: 'Large',
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-01-product-02.jpg',
-    imageAlt: "Front of men's Basic Tee in black.",
-  },
-  {
-    id: 3,
-    name: 'Nomad Tumbler',
-    href: '#',
-    price: '$35.00',
-    color: 'White',
-    inStock: true,
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/shopping-cart-page-01-product-03.jpg',
-    imageAlt: 'Insulated bottle with white base and black snap lid.',
-  },
-]
 const relatedProducts = [
   {
     id: 1,
@@ -63,8 +21,22 @@ const relatedProducts = [
 ]
 
 export default function Cart() {
-  const { cartItems, subtotal, shippingEstimate, taxEstimate, orderTotal } =
-    useCart()
+  const {
+    cartItems,
+    subtotal,
+    shippingEstimate,
+    taxEstimate,
+    orderTotal,
+    deleteCartItem,
+  } = useCart()
+
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteCartItem(id)
+    } catch (error) {
+      console.error('Failed to delete item.')
+    }
+  }
 
   return (
     <div className="bg-white">
@@ -126,7 +98,7 @@ export default function Cart() {
                             name={`quantity-${index}`}
                             aria-label={`Quantity, ${item.name}`}
                             className="col-start-1 row-start-1 appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6"
-                            value={item.quantity}
+                            defaultValue={item.quantity}
                           >
                             <option value={1}>1</option>
                             <option value={2}>2</option>
@@ -145,6 +117,7 @@ export default function Cart() {
 
                         <div className="absolute top-0 right-0">
                           <button
+                            onClick={() => handleDelete(item.id)}
                             type="button"
                             className="-m-2 inline-flex p-2 text-gray-400 hover:text-gray-500"
                           >

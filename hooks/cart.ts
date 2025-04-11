@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 
-import { getCartItems, getCartSize } from '@/lib/supabase/cart'
-import { CartItem } from '@/types/cart'
+import { deleteCartItem, getCartItems, getCartSize } from '@/lib/cart';
+import { CartItem } from '@/types/cart';
 
 export const useCartSize = () => {
   const [cartSize, setCartSize] = useState(0)
@@ -30,7 +30,7 @@ export const useCartSize = () => {
 
 export const useCart = () => {
   const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const subtotal = cartItems.reduce(
     (total, item) => total + item.selling_price,
@@ -40,21 +40,32 @@ export const useCart = () => {
   const taxEstimate = subtotal * 0.06
   const orderTotal = subtotal + shippingEstimate + taxEstimate
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const items = await getCartItems()
+  const fetchCartItems = async () => {
+    setIsLoading(true)
 
-        if (!items) return
-        setCartItems(items)
-      } catch (error: any) {
-        setError(error.message)
-      } finally {
-        setIsLoading(false)
-      }
+    try {
+      const items = await getCartItems()
+
+      if (!items) return
+      setCartItems(items)
+    } catch (error: any) {
+      setError(error.message)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    load()
+  const deleteCartItemById = async (id: number) => {
+    try {
+      await deleteCartItem(id)
+      await fetchCartItems()
+    } catch (error) {
+      throw new Error('Failed to delete cart item')
+    }
+  }
+
+  useEffect(() => {
+    fetchCartItems()
   }, [])
 
   return {
@@ -65,5 +76,7 @@ export const useCart = () => {
     orderTotal,
     isLoading,
     error,
+    refetch: fetchCartItems,
+    deleteCartItem: deleteCartItemById,
   }
 }

@@ -586,8 +586,12 @@ export type Database = {
         Args: { user_id: string; product_variant_id: number }
         Returns: undefined
       }
+      delete_cart_item: {
+        Args: { cart_item_id: number }
+        Returns: undefined
+      }
       get_cart_items: {
-        Args: { user_id: string }
+        Args: Record<PropertyKey, never>
         Returns: {
           id: number
           image_url: string
