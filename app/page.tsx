@@ -1,43 +1,12 @@
 'use client'
-import Link from 'next/link';
+import Link from 'next/link'
 
-import { useCategoryStore } from '@/stores/category';
-
-const collections = [
-  {
-    name: 'Handcrafted Collection',
-    href: '#',
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-01.jpg',
-    imageAlt:
-      'Brown leather key ring with brass metal loops and rivets on wood table.',
-    description:
-      'Keep your phone, keys, and wallet together, so you can lose everything at once.',
-  },
-  {
-    name: 'Organized Desk Collection',
-    href: '#',
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-02.jpg',
-    imageAlt:
-      'Natural leather mouse pad on white desk next to porcelain mug and keyboard.',
-    description:
-      'The rest of the house will still be a mess, but your desk will look great.',
-  },
-  {
-    name: 'Focus Collection',
-    href: '#',
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-collection-03.jpg',
-    imageAlt:
-      'Person placing task list card into walnut card holder next to felt carrying case on leather desk pad.',
-    description:
-      'Be more productive than enterprise project managers with a single piece of paper.',
-  },
-]
+import { useCategoryStore } from '@/stores/category'
+import { useCollectionStore } from '@/stores/collection'
 
 export default function Home() {
   const { categories } = useCategoryStore()
+  const { collections } = useCollectionStore()
 
   return (
     <div className="bg-white">
@@ -45,16 +14,9 @@ export default function Home() {
       <div className="relative bg-gray-900">
         {/* Decorative image and overlay */}
         <div aria-hidden="true" className="absolute inset-0 overflow-hidden">
-          <img
-            alt=""
-            src="https://tailwindcss.com/plus-assets/img/ecommerce-images/home-page-01-hero-full-width.jpg"
-            className="size-full object-cover"
-          />
+          <img alt="" src="/home-hero.jpg" className="size-full object-cover" />
         </div>
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 bg-gray-900 opacity-50"
-        />
+        <div aria-hidden="true" className="absolute inset-0 bg-black/50" />
 
         <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-32 text-center sm:py-64 lg:px-0">
           <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">
@@ -143,15 +105,15 @@ export default function Home() {
           </p>
 
           <div className="mt-10 space-y-12 lg:grid lg:grid-cols-3 lg:gap-x-8 lg:space-y-0">
-            {collections.map((collection) => (
+            {collections?.map((collection) => (
               <a
                 key={collection.name}
-                href={collection.href}
+                href={`/collections/${collection.slug}`}
                 className="group block"
               >
                 <img
-                  alt={collection.imageAlt}
-                  src={collection.imageSrc}
+                  alt={collection.name}
+                  src={collection.image_url ?? ''}
                   className="aspect-3/2 w-full rounded-lg object-cover group-hover:opacity-75 lg:aspect-5/6"
                 />
                 <h3 className="mt-4 text-base font-semibold text-gray-900">

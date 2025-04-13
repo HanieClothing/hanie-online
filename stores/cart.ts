@@ -1,9 +1,9 @@
-import { create } from 'zustand';
+import { create } from 'zustand'
 
-import { addCartItem, deleteCartItem, getCartItems } from '@/lib/cart';
-import { CartItem } from '@/types/cart';
+import { addCartItem, deleteCartItem, getCartItems } from '@/lib/cart'
+import { CartItem } from '@/types/cart'
 
-import { useLoadingStore } from './loading';
+import { useLoadingStore } from './loading'
 
 type CartState = {
   cartItems: CartItem[] | null
@@ -34,11 +34,11 @@ export const useCartStore = create<CartState>((set, get) => ({
       if (!items) return
 
       const subtotal = items.reduce(
-        (total, item) => total + item.selling_price,
+        (total, item) => total + item.selling_price * item.quantity,
         0
       )
       const tax = subtotal * 0.06
-      const shipping = 5
+      const shipping = items.length > 0 ? 5 : 0
       const orderTotal = subtotal + tax + shipping
 
       set({
@@ -58,8 +58,16 @@ export const useCartStore = create<CartState>((set, get) => ({
   },
 
   addCartItem: async (productVariantId: number) => {
-    await addCartItem(productVariantId)
-    await get().fetchCartItems()
+    const { fetchCartItems } = get()
+
+    try {
+      await addCartItem(productVariantId)
+      await fetchCartItems()
+    } catch (error) {
+      if (error instanceof Error) {
+        console.error(error.message)
+      }
+    }
   },
 
   deleteCartItem: async (id: number) => {

@@ -19,12 +19,6 @@ const footerNavigation = {
     { name: 'Returns & Exchanges', href: '#' },
     { name: 'Redeem a Gift Card', href: '#' },
   ],
-  connect: [
-    { name: 'Contact Us', href: '#' },
-    { name: 'Facebook', href: '#' },
-    { name: 'Instagram', href: '#' },
-    { name: 'Pinterest', href: '#' },
-  ],
 }
 
 function Footer() {
@@ -38,15 +32,13 @@ function Footer() {
           <div className="grid grid-cols-1 md:grid-flow-col md:auto-rows-min md:grid-cols-12 md:gap-x-8 md:gap-y-16">
             {/* Image section */}
             <div className="col-span-1 md:col-span-2 lg:col-start-1 lg:row-start-1">
-              <img
-                alt=""
-                src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-auto"
-              />
+              <span className="uppercase text-black font-serif font-semibold text-2xl tracking-[0.1em]">
+                Hanie
+              </span>
             </div>
 
             {/* Sitemap sections */}
-            <div className="col-span-6 mt-10 grid grid-cols-2 gap-8 sm:grid-cols-3 md:col-span-8 md:col-start-3 md:row-start-1 md:mt-0 lg:col-span-6 lg:col-start-2">
+            <div className="col-span-6 mt-10 grid grid-cols-2 gap-8 sm:grid-cols-3 md:col-span-8 md:col-start-3 md:row-start-1 md:mt-0 lg:col-span-6">
               <div className="grid grid-cols-1 gap-y-12 sm:col-span-2 sm:grid-cols-2 sm:gap-x-8">
                 <div>
                   <h3 className="text-sm font-medium text-gray-900">
@@ -108,19 +100,19 @@ function Footer() {
               <p className="mt-6 text-sm text-gray-500">
                 The latest deals and savings, sent to your inbox weekly.
               </p>
-              <form className="mt-2 flex sm:max-w-md">
+              <form className="mt-6 flex sm:max-w-md">
                 <input
                   id="email-address"
                   type="text"
                   required
                   autoComplete="email"
                   aria-label="Email address"
-                  className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
+                  className="block w-full rounded-md bg-white px-4 py-2 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-black"
                 />
                 <div className="ml-4 shrink-0">
                   <button
                     type="submit"
-                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    className="flex w-full items-center justify-center rounded-md border border-transparent bg-black px-4 py-2 font-medium text-white shadow-sm hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 text-sm"
                   >
                     Sign up
                   </button>

@@ -1,13 +1,16 @@
 'use client'
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useParams } from 'next/navigation'
+import { useEffect, useState } from 'react'
 
-import { useCartStore } from '@/stores/cart';
-import { ProductColour, ProductSize, TransformedProduct } from '@/types/product';
-import { cn } from '@/utils/cn';
-import { formatToRM } from '@/utils/currency';
-import { supabase } from '@/utils/supabase/client';
-import { Radio, RadioGroup } from '@headlessui/react';
+import Loading from '@/components/loading'
+import { useToast } from '@/hooks/use-toast'
+import { useCartStore } from '@/stores/cart'
+import { useLoadingStore } from '@/stores/loading'
+import { ProductColour, ProductSize, TransformedProduct } from '@/types/product'
+import { cn } from '@/utils/cn'
+import { formatToRM } from '@/utils/currency'
+import { supabase } from '@/utils/supabase/client'
+import { Radio, RadioGroup } from '@headlessui/react'
 
 const relatedProducts = [
   {
@@ -25,6 +28,8 @@ const relatedProducts = [
 
 export default function Product() {
   const { code } = useParams()
+  const { toast } = useToast()
+  const { isLoading } = useLoadingStore()
   const { addCartItem } = useCartStore()
   const [product, setProduct] = useState<TransformedProduct | null>(null)
   const [selectedColour, setSelectedColour] = useState('')
@@ -130,6 +135,10 @@ export default function Product() {
     if (!productVariant) return
 
     await addCartItem(productVariant.id)
+    toast({
+      title: 'Added to Cart',
+      description: 'The item has been successfully added to your cart.',
+    })
   }
 
   return (
@@ -236,7 +245,7 @@ export default function Product() {
                           true
                             ? 'cursor-pointer focus:outline-none'
                             : 'cursor-not-allowed opacity-25',
-                          'flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-3 text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 data-[checked]:border-transparent data-[checked]:bg-indigo-600 data-[checked]:text-white data-[checked]:ring-2 data-[checked]:ring-indigo-500 data-[checked]:ring-offset-2 data-[checked]:hover:bg-indigo-700 sm:flex-1'
+                          'flex items-center justify-center rounded-md border border-gray-200 bg-white px-3 py-3 text-sm font-medium uppercase text-gray-900 hover:bg-gray-50 data-[checked]:border-transparent data-[checked]:bg-black data-[checked]:text-white data-[checked]:ring-2 data-[checked]:ring-black data-[checked]:ring-offset-2 data-[checked]:hover:bg-black/80 sm:flex-1'
                         )}
                       >
                         {size.name}
@@ -249,9 +258,13 @@ export default function Product() {
               <button
                 onClick={addToCart}
                 type="submit"
-                className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                className="mt-8 flex w-full items-center justify-center rounded-md border border-transparent bg-black px-8 py-3 text-base font-medium text-white hover:bg-black/70 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
               >
-                Add to cart
+                {isLoading ? (
+                  <Loading className="size-6 text-black/50 animate-spin fill-white" />
+                ) : (
+                  'Add to Cart'
+                )}
               </button>
             </form>
           </div>

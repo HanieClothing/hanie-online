@@ -1,26 +1,36 @@
 'use client'
+import Link from 'next/link'
+import { Fragment, useState } from 'react'
 
-import Link from 'next/link';
-import { Fragment, useState } from 'react';
-
-import { useCartStore } from '@/stores/cart';
-import { useCategoryStore } from '@/stores/category';
+import { useCartStore } from '@/stores/cart'
+import { useCategoryStore } from '@/stores/category'
+import { useCollectionStore } from '@/stores/collection'
 import {
-    Dialog, DialogBackdrop, DialogPanel, Popover, PopoverButton, PopoverGroup, PopoverPanel, Tab,
-    TabGroup, TabList, TabPanel, TabPanels
-} from '@headlessui/react';
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  Popover,
+  PopoverButton,
+  PopoverGroup,
+  PopoverPanel,
+  Tab,
+  TabGroup,
+  TabList,
+  TabPanel,
+  TabPanels,
+} from '@headlessui/react'
 import {
-    Bars3Icon, ChatBubbleLeftRightIcon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon
-} from '@heroicons/react/24/outline';
-
-const pages = [
-  { name: 'New Arrivals', href: '/collections/new-arrivals' },
-  { name: 'Value Buys', href: '/collections/value-buys' },
-]
+  Bars3Icon,
+  ChatBubbleLeftRightIcon,
+  MagnifyingGlassIcon,
+  ShoppingBagIcon,
+  XMarkIcon,
+} from '@heroicons/react/24/outline'
 
 function Header() {
   const { cartItems } = useCartStore()
   const { categories } = useCategoryStore()
+  const { collections } = useCollectionStore()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (
@@ -98,13 +108,13 @@ function Header() {
             </TabGroup>
 
             <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-              {pages.map((page) => (
-                <div key={page.name} className="flow-root">
+              {collections?.map((collection) => (
+                <div key={collection.id} className="flow-root">
                   <Link
-                    href={page.href}
+                    href={`/collections/${collection.slug}`}
                     className="-m-2 block p-2 font-medium text-gray-900"
                   >
-                    {page.name}
+                    {collection.name}
                   </Link>
                 </div>
               ))}
@@ -207,13 +217,13 @@ function Header() {
                         </PopoverPanel>
                       </Popover>
 
-                      {pages.map((page) => (
+                      {collections?.map((collection) => (
                         <Link
-                          key={page.name}
-                          href={page.href}
+                          key={collection.id}
+                          href={`/collections/${collection.slug}`}
                           className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
                         >
-                          {page.name}
+                          {collection.name}
                         </Link>
                       ))}
                     </div>
