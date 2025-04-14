@@ -47,7 +47,11 @@ export const updateSession = async (request: NextRequest) => {
 
   // block authenticated users from accessing auth pages
   if (isAuthenticated && authRoutes.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.redirect(new URL('/store', request.url))
+  }
+
+  if (isAuthenticated && request.nextUrl.pathname === '/') {
+    return NextResponse.redirect(new URL('/store', request.url))
   }
 
   return response

@@ -1,4 +1,5 @@
 'use client'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useCartItemsQuery, useDeleteCartItemMutation } from '@/hooks/cart'
 import { formatToRM } from '@/utils/currency'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
@@ -24,7 +25,7 @@ const relatedProducts = [
 ]
 
 export default function Cart() {
-  const { data: cartItems } = useCartItemsQuery()
+  const { data: cartItems, isLoading, isError } = useCartItemsQuery()
   const deleteCartItemMutation = useDeleteCartItemMutation()
 
   const subtotal = 0
@@ -49,12 +50,51 @@ export default function Cart() {
               Items in your shopping cart
             </h2>
 
-            {cartItems && cartItems.length > 0 ? (
-              <ul
-                role="list"
-                className="divide-y divide-gray-200 border-t border-b border-gray-200"
-              >
-                {cartItems?.map((item, index) => (
+            <ul
+              role="list"
+              className="divide-y divide-gray-200 border-t border-b border-gray-200"
+            >
+              {isLoading &&
+                Array.from({ length: 3 }).map((_, index) => (
+                  <div key={index} className="flex py-6 sm:py-10">
+                    <div className="shrink-0">
+                      <Skeleton className="size-24 rounded-md sm:size-48" />
+                    </div>
+
+                    <div className="ml-4 flex flex-1 flex-col justify-between sm:ml-6">
+                      <div className="relative pr-9 sm:grid sm:grid-cols-2 sm:gap-x-6 sm:pr-0">
+                        <div>
+                          <Skeleton className="w-full h-4" />
+
+                          <div className="mt-1 flex">
+                            <Skeleton className="w-8 h-4" />
+                            <Skeleton className="w-8 h-4 ml-2" />
+                          </div>
+
+                          <Skeleton className="w-full h-4 mt-1" />
+                        </div>
+
+                        <div className="mt-4 sm:mt-0 sm:pr-9">
+                          <div className="inline-grid w-full max-w-16 grid-cols-1">
+                            <Skeleton className="w-full h-4 col-start-1 row-start-1 rounded-md" />
+                          </div>
+
+                          <div className="absolute top-0 right-0">
+                            <Skeleton className="size-5" />
+                          </div>
+                        </div>
+                      </div>
+                      <div className="mt-4">
+                        <Skeleton className="h-4 w-[100px]" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              {!isLoading &&
+                !isError &&
+                cartItems &&
+                cartItems.length > 0 &&
+                cartItems.map((item, index) => (
                   <li key={item.id} className="flex py-6 sm:py-10">
                     <div className="shrink-0">
                       <img
@@ -152,8 +192,9 @@ export default function Cart() {
                     </div>
                   </li>
                 ))}
-              </ul>
-            ) : (
+            </ul>
+
+            {!isLoading && !isError && cartItems && cartItems.length <= 0 && (
               <div>
                 <p>Your shopping cart is empty.</p>
               </div>

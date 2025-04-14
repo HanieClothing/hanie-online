@@ -162,7 +162,7 @@ function Header() {
                     <div className="flex h-full justify-center space-x-8">
                       <Popover className="flex">
                         <div className="relative flex">
-                          <PopoverButton className="group relative flex items-center justify-center text-sm font-medium text-gray-700 transition-colors duration-200 ease-out hover:text-gray-800 data-[open]:text-black data-[open]:font-semibold">
+                          <PopoverButton className="group outline-none relative flex items-center justify-center text-sm font-medium text-gray-700 transition-colors duration-200 ease-out hover:text-gray-800 data-[open]:text-black data-[open]:font-semibold">
                             Shop All
                             <span
                               aria-hidden="true"

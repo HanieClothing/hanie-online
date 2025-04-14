@@ -2,6 +2,7 @@
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
 
+import { Skeleton } from '@/components/ui/skeleton'
 import { useCategoryQuery } from '@/hooks/categories'
 import { useProductsByCategoryQuery } from '@/hooks/products'
 import { formatToRM } from '@/utils/currency'
@@ -48,11 +49,19 @@ const filters = [
 ]
 
 export default function Category() {
-  const { slug } = useParams()
+  const { slug } = useParams<{ slug: string }>()
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
 
-  const { data: category } = useCategoryQuery(slug?.toString() ?? '')
-  const { data: products } = useProductsByCategoryQuery(slug?.toString() ?? '')
+  const {
+    data: category,
+    isLoading: isCategoryLoading,
+    isError: isCategoryError,
+  } = useCategoryQuery(slug)
+  const {
+    data: products,
+    isLoading: isProductsLoading,
+    isError: isProductsError,
+  } = useProductsByCategoryQuery(slug)
 
   return (
     <div>
@@ -160,12 +169,22 @@ export default function Category() {
       <main>
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
           <div className="py-24 text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-              {category?.name}
-            </h1>
-            <p className="mx-auto mt-4 max-w-3xl text-base text-gray-500">
-              {category?.description}
-            </p>
+            {isCategoryLoading && (
+              <>
+                <Skeleton className="h-8 w-[250px] mx-auto" />
+                <Skeleton className="mt-4 h-8 w-full max-w-3xl mx-auto" />
+              </>
+            )}
+            {!isCategoryLoading && !isCategoryError && category && (
+              <>
+                <h1 className="text-4xl font-bold tracking-tight text-gray-900">
+                  {category.name}
+                </h1>
+                <p className="mx-auto mt-4 max-w-3xl text-base text-gray-500">
+                  {category.description}
+                </p>
+              </>
+            )}
           </div>
 
           {/* Filters */}
@@ -268,9 +287,35 @@ export default function Category() {
               Products
             </h2>
 
-            {products && products.length > 0 && (
-              <div className="grid gap-x-6 gap-y-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">
-                {products.map((product) => (
+            <div className="grid gap-x-6 gap-y-10 grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:gap-x-8">
+              {isProductsLoading &&
+                Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index}>
+                    <Skeleton className="w-full aspect-[3/4] rounded-lg sm:aspect-[2/3]" />
+
+                    <div className="mt-4 flex items-center justify-between">
+                      <Skeleton className="w-1/2 h-4" />
+                      <Skeleton className="w-1/3 h-4" />
+                    </div>
+
+                    <div className="flex items-center justify-start space-x-3 pt-2">
+                      <Skeleton className="size-4 rounded-full" />
+                      <Skeleton className="size-4 rounded-full" />
+                      <Skeleton className="size-4 rounded-full" />
+                    </div>
+
+                    <div className="flex items-center justify-start space-x-2 pt-2">
+                      <Skeleton className="size-4 rounded" />
+                      <Skeleton className="size-4 rounded" />
+                      <Skeleton className="size-4 rounded" />
+                    </div>
+                  </div>
+                ))}
+
+              {!isProductsLoading &&
+                !isProductsError &&
+                products &&
+                products.map((product) => (
                   <a
                     key={product.id}
                     href={`/products/${product.code}`}
@@ -279,7 +324,7 @@ export default function Category() {
                     <img
                       alt={'Product image'}
                       src={product.image_url}
-                      className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75 sm:aspect-2/3"
+                      className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75 sm:aspect-[2/3]"
                     />
                     <div className="mt-4 flex items-center justify-between text-base font-medium text-gray-900">
                       <h3>{product.name}</h3>
@@ -317,8 +362,7 @@ export default function Category() {
                     </div>
                   </a>
                 ))}
-              </div>
-            )}
+            </div>
           </section>
         </div>
       </main>
