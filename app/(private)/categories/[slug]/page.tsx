@@ -1,31 +1,29 @@
 'use client'
+import { useParams } from 'next/navigation'
+import { useState } from 'react'
 
-import { useParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
-
-import { getCategoryBySlug } from '@/lib/categories';
-import { Tables } from '@/types/database';
-import { Product } from '@/types/product';
-import { formatToRM } from '@/utils/currency';
-import { supabase } from '@/utils/supabase/client';
+import { useCategoryQuery } from '@/hooks/categories'
+import { useProductsByCategoryQuery } from '@/hooks/products'
+import { formatToRM } from '@/utils/currency'
 import {
-    Dialog, DialogBackdrop, DialogPanel, Disclosure, DisclosureButton, DisclosurePanel, Menu,
-    MenuButton, MenuItem, MenuItems, Popover, PopoverButton, PopoverGroup, PopoverPanel
-} from '@headlessui/react';
-import { ChevronDownIcon } from '@heroicons/react/20/solid';
-import { XMarkIcon } from '@heroicons/react/24/outline';
+  Dialog,
+  DialogBackdrop,
+  DialogPanel,
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Popover,
+  PopoverButton,
+  PopoverGroup,
+  PopoverPanel,
+} from '@headlessui/react'
+import { ChevronDownIcon } from '@heroicons/react/20/solid'
+import { XMarkIcon } from '@heroicons/react/24/outline'
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#' },
-  { name: 'Best Rating', href: '#' },
-  { name: 'Newest', href: '#' },
-  { name: 'Price: Low to High', href: '#' },
-  { name: 'Price: High to Low', href: '#' },
-]
 const filters = [
   {
-    id: 'color',
-    name: 'Color',
+    id: 'colours',
+    name: 'Colours',
     options: [
       { value: 'white', label: 'White' },
       { value: 'black', label: 'Black' },
@@ -52,43 +50,9 @@ const filters = [
 export default function Category() {
   const { slug } = useParams()
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [category, setCategory] = useState<Tables<'categories'> | null>(null)
-  const [products, setProducts] = useState<Product[] | null>(null)
 
-  useEffect(() => {
-    if (!slug) return
-
-    const fetchCategoryBySlug = async () => {
-      const data = await getCategoryBySlug(slug.toString())
-
-      if (data) {
-        setCategory(data)
-      }
-    }
-
-    fetchCategoryBySlug()
-  }, [])
-
-  useEffect(() => {
-    if (!category || !slug) return
-
-    const fetchProductsByCategory = async () => {
-      const { data, error } = await supabase.rpc('get_products_by_category', {
-        category_slug: slug.toString(),
-      })
-
-      if (error) {
-        console.error('Error fetching categories: ', error)
-        return
-      }
-
-      if (data) {
-        setProducts(data)
-      }
-    }
-
-    fetchProductsByCategory()
-  }, [category])
+  const { data: category } = useCategoryQuery(slug?.toString() ?? '')
+  const { data: products } = useProductsByCategoryQuery(slug?.toString() ?? '')
 
   return (
     <div>
@@ -213,37 +177,7 @@ export default function Category() {
               Product filters
             </h2>
 
-            <div className="flex items-center justify-between">
-              <Menu as="div" className="relative inline-block text-left">
-                <div>
-                  <MenuButton className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
-                    <ChevronDownIcon
-                      aria-hidden="true"
-                      className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
-                    />
-                  </MenuButton>
-                </div>
-
-                <MenuItems
-                  transition
-                  className="absolute left-0 z-10 mt-2 w-40 origin-top-left rounded-md bg-white ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-                >
-                  <div className="py-1">
-                    {sortOptions.map((option) => (
-                      <MenuItem key={option.name}>
-                        <a
-                          href={option.href}
-                          className="block px-4 py-2 text-sm font-medium text-gray-900 data-focus:bg-gray-100 data-focus:outline-hidden"
-                        >
-                          {option.name}
-                        </a>
-                      </MenuItem>
-                    ))}
-                  </div>
-                </MenuItems>
-              </Menu>
-
+            <div className="flex items-center justify-end">
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(true)}
@@ -276,7 +210,7 @@ export default function Category() {
 
                     <PopoverPanel
                       transition
-                      className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                      className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
                     >
                       <form className="space-y-4">
                         {section.options.map((option, optionIdx) => (
@@ -288,7 +222,7 @@ export default function Category() {
                                   id={`filter-${section.id}-${optionIdx}`}
                                   name={`${section.id}[]`}
                                   type="checkbox"
-                                  className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                                  className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                 />
                                 <svg
                                   fill="none"
@@ -300,14 +234,14 @@ export default function Category() {
                                     strokeWidth={2}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    className="opacity-0 group-has-checked:opacity-100"
+                                    className="opacity-0 group-has-[:checked]:opacity-100"
                                   />
                                   <path
                                     d="M3 7H11"
                                     strokeWidth={2}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    className="opacity-0 group-has-indeterminate:opacity-100"
+                                    className="opacity-0 group-has-[:indeterminate]:opacity-100"
                                   />
                                 </svg>
                               </div>

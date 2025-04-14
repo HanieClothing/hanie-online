@@ -2,9 +2,9 @@
 import Link from 'next/link'
 import { Fragment, useState } from 'react'
 
-import { useCartStore } from '@/stores/cart'
-import { useCategoryStore } from '@/stores/category'
-import { useCollectionStore } from '@/stores/collection'
+import { useCartItemsQuery } from '@/hooks/cart'
+import { useCategoriesQuery } from '@/hooks/categories'
+import { useCollectionsQuery } from '@/hooks/collections'
 import {
   Dialog,
   DialogBackdrop,
@@ -28,9 +28,9 @@ import {
 } from '@heroicons/react/24/outline'
 
 function Header() {
-  const { cartItems } = useCartStore()
-  const { categories } = useCategoryStore()
-  const { collections } = useCollectionStore()
+  const { data: cartItems } = useCartItemsQuery()
+  const { data: categories } = useCategoriesQuery()
+  const { data: collections } = useCollectionsQuery()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 
   return (

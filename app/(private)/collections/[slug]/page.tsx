@@ -1,9 +1,8 @@
 'use client'
 import { useParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
-import { getCollectionBySlug } from '@/lib/collections'
-import { Tables } from '@/types/database'
+import { useCollectionQuery } from '@/hooks/collections'
 import { Product } from '@/types/product'
 import { formatToRM } from '@/utils/currency'
 import {
@@ -62,45 +61,9 @@ const filters = [
 export default function Collection() {
   const { slug } = useParams()
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [collection, setCollection] = useState<Tables<'collections'> | null>(
-    null
-  )
   const [products, setProducts] = useState<Product[] | null>(null)
 
-  useEffect(() => {
-    if (!slug) return
-
-    const fetchCollectionBySlug = async () => {
-      const data = await getCollectionBySlug(slug.toString())
-
-      if (data) {
-        setCollection(data)
-      }
-    }
-
-    fetchCollectionBySlug()
-  }, [])
-
-  useEffect(() => {
-    if (!collection || !slug) return
-
-    // const fetchProductsByCategory = async () => {
-    //   const { data, error } = await supabase.rpc('get_products_by_category', {
-    //     category_slug: slug.toString(),
-    //   })
-
-    //   if (error) {
-    //     console.error('Error fetching categories: ', error)
-    //     return
-    //   }
-
-    //   if (data) {
-    //     setProducts(data)
-    //   }
-    // }
-
-    // fetchProductsByCategory()
-  }, [collection])
+  const { data: collection } = useCollectionQuery(slug?.toString() ?? '')
 
   return (
     <div>

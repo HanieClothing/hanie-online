@@ -8,12 +8,12 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from '@/components/ui/carousel'
-import { useCategoryStore } from '@/stores/category'
-import { useCollectionStore } from '@/stores/collection'
+import { useCategoriesQuery } from '@/hooks/categories'
+import { useCollectionsQuery } from '@/hooks/collections'
 
 export default function Home() {
-  const { categories } = useCategoryStore()
-  const { collections } = useCollectionStore()
+  const { data: categories } = useCategoriesQuery()
+  const { data: collections } = useCollectionsQuery()
 
   return (
     <div className="bg-white">

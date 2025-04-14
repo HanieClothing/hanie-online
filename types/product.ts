@@ -38,6 +38,8 @@ export type RawProduct = {
   description: string | null
   purchased_price: number
   selling_price: number
+  product_variant_id: number
+  images: string[]
   colour: string
   colour_hex: string
   size: string

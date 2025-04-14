@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server'
 
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient } from '@supabase/ssr'
 
 export const updateSession = async (request: NextRequest) => {
   let response = NextResponse.next({

@@ -3,13 +3,11 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
 import Loading from '@/components/loading'
-import { useToast } from '@/hooks/use-toast'
-import { useCartStore } from '@/stores/cart'
+import { useAddCartItemMutation } from '@/hooks/cart'
+import { useProductByCodeQuery } from '@/hooks/products'
 import { useLoadingStore } from '@/stores/loading'
-import { ProductColour, ProductSize, TransformedProduct } from '@/types/product'
 import { cn } from '@/utils/cn'
 import { formatToRM } from '@/utils/currency'
-import { supabase } from '@/utils/supabase/client'
 import { Radio, RadioGroup } from '@headlessui/react'
 
 const relatedProducts = [
@@ -28,90 +26,17 @@ const relatedProducts = [
 
 export default function Product() {
   const { code } = useParams()
-  const { toast } = useToast()
   const { isLoading } = useLoadingStore()
-  const { addCartItem } = useCartStore()
-  const [product, setProduct] = useState<TransformedProduct | null>(null)
+  const { data: product } = useProductByCodeQuery(code?.toString() ?? '')
+  const addCartItemMutation = useAddCartItemMutation()
   const [selectedColour, setSelectedColour] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
 
   useEffect(() => {
-    if (!code) return
-
-    const fetchProduct = async () => {
-      const { data, error } = await supabase.rpc('get_product_by_code', {
-        product_code: code.toString(),
-      })
-
-      if (error) {
-        console.error('Error fetching product: ', error)
-        return
-      }
-
-      if (data.length === 0) return
-
-      const base = data[0]
-      const colourMap = new Map<string, ProductColour>()
-      const sizeMap = new Map<string, ProductSize>()
-      const images: Record<string, string[]> = {}
-
-      data.forEach((item) => {
-        if (!colourMap.has(item.colour)) {
-          colourMap.set(item.colour, {
-            name: item.colour,
-            hexCode: item.colour_hex,
-          })
-        }
-
-        if (!sizeMap.has(item.size)) {
-          sizeMap.set(item.size, {
-            name: item.size,
-            description: item.size_description,
-          })
-        }
-      })
-
-      const variants = data.map((item) => ({
-        id: item.product_variant_id,
-        colour: item.colour,
-        colourHex: item.colour_hex,
-        size: item.size,
-        sizeDescription: item.size_description,
-        quantity: item.quantity,
-      }))
-      const availableColours = Array.from(colourMap.values())
-      const availableSizes = Array.from(sizeMap.values())
-
-      availableColours.forEach((colour) => {
-        const productImages = data.find(
-          (item) => item.colour === colour.name
-        )?.images
-        if (!productImages) return
-
-        images[colour.name] = productImages
-      })
-
-      const transformed: TransformedProduct = {
-        code: base.code,
-        name: base.name,
-        category_id: base.category_id,
-        subcategory_id: base.subcategory_id,
-        description: base.description,
-        purchased_price: base.purchased_price,
-        selling_price: base.selling_price,
-        status_id: base.status_id,
-        variants,
-        availableColours,
-        availableSizes,
-        images,
-      }
-
-      setProduct(transformed)
-      setSelectedColour(transformed.availableColours[0].name)
+    if (product?.availableColours?.length && !selectedColour) {
+      setSelectedColour(product.availableColours[0].name)
     }
-
-    fetchProduct()
-  }, [code])
+  }, [product, selectedColour])
 
   const addToCart: React.MouseEventHandler<HTMLButtonElement> = async (e) => {
     e.preventDefault()
@@ -134,11 +59,7 @@ export default function Product() {
     )
     if (!productVariant) return
 
-    await addCartItem(productVariant.id)
-    toast({
-      title: 'Added to Cart',
-      description: 'The item has been successfully added to your cart.',
-    })
+    await addCartItemMutation.mutateAsync(productVariant.id)
   }
 
   return (
@@ -162,7 +83,9 @@ export default function Product() {
 
             {product && product.images && (
               <div className="grid grid-cols-1 lg:grid-cols-2 lg:grid-rows-3 lg:gap-8">
-                {product.images[selectedColour].map((image, index) => (
+                {product.images[
+                  selectedColour ?? product.availableColours[0].name
+                ]?.map((image, index) => (
                   <img
                     key={index}
                     alt="product image alt"

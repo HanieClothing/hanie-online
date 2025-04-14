@@ -1,5 +1,5 @@
 'use client'
-import { useCartStore } from '@/stores/cart'
+import { useCartItemsQuery, useDeleteCartItemMutation } from '@/hooks/cart'
 import { formatToRM } from '@/utils/currency'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import {
@@ -24,21 +24,16 @@ const relatedProducts = [
 ]
 
 export default function Cart() {
-  const {
-    cartItems,
-    subtotal,
-    shippingEstimate,
-    taxEstimate,
-    orderTotal,
-    deleteCartItem,
-  } = useCartStore()
+  const { data: cartItems } = useCartItemsQuery()
+  const deleteCartItemMutation = useDeleteCartItemMutation()
 
-  const handleDelete = async (id: number) => {
-    try {
-      await deleteCartItem(id)
-    } catch (error) {
-      console.error('Failed to delete item.')
-    }
+  const subtotal = 0
+  const shippingEstimate = 0
+  const taxEstimate = 0
+  const orderTotal = 0
+
+  const handleDelete = async (cartItemId: number) => {
+    deleteCartItemMutation.mutate(cartItemId)
   }
 
   return (
