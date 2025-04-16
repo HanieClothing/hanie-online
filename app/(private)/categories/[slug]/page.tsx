@@ -307,7 +307,7 @@ export default function Category() {
               {isProductsLoading &&
                 Array.from({ length: 4 }).map((_, index) => (
                   <div key={index}>
-                    <Skeleton className="w-full aspect-[3/4] rounded-lg sm:aspect-[2/3]" />
+                    <Skeleton className="w-full aspect-[3/4] rounded-lg" />
 
                     <div className="mt-4 flex items-center justify-between">
                       <Skeleton className="w-1/2 h-4" />
@@ -340,7 +340,7 @@ export default function Category() {
                     <img
                       alt={'Product image'}
                       src={product.image_url}
-                      className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75 sm:aspect-[2/3]"
+                      className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75"
                     />
                     <div className="mt-4 flex items-start justify-between text-base font-medium text-gray-900">
                       <div>
