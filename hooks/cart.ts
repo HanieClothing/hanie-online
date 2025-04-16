@@ -1,4 +1,8 @@
-import { addCartItem, deleteCartItem } from '@/mutations/cart'
+import {
+  addCartItem,
+  deleteCartItem,
+  updateCartItemQuantity,
+} from '@/mutations/cart'
 import { getCartItems } from '@/queries/cart'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
@@ -39,6 +43,32 @@ export function useDeleteCartItemMutation() {
 
   const mutationFn = async (cartItemId: number) => {
     return deleteCartItem(client, cartItemId).then((result) => result.data)
+  }
+
+  return useMutation({
+    mutationFn,
+    onSuccess: async () => {
+      queryClient.refetchQueries({
+        queryKey: ['cart_items'],
+      })
+    },
+  })
+}
+
+export function useUpdateCartItemQuantityMutation() {
+  const client = useSupabase()
+  const queryClient = useQueryClient()
+
+  const mutationFn = async ({
+    cartItemId,
+    quantity,
+  }: {
+    cartItemId: number
+    quantity: number
+  }) => {
+    return updateCartItemQuantity(client, { cartItemId, quantity }).then(
+      (result) => result.data
+    )
   }
 
   return useMutation({

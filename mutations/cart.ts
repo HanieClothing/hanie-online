@@ -15,3 +15,15 @@ export async function deleteCartItem(client: Client, cartItemId: number) {
     })
     .throwOnError()
 }
+
+export async function updateCartItemQuantity(
+  client: Client,
+  { cartItemId, quantity }: { cartItemId: number; quantity: number }
+) {
+  return client
+    .rpc('update_cart_item_quantity', {
+      cart_item_id: cartItemId,
+      quantity,
+    })
+    .throwOnError()
+}

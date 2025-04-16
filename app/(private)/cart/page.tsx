@@ -1,6 +1,13 @@
 'use client'
+import { useEffect, useState } from 'react'
+
 import { Skeleton } from '@/components/ui/skeleton'
-import { useCartItemsQuery, useDeleteCartItemMutation } from '@/hooks/cart'
+import {
+  useCartItemsQuery,
+  useDeleteCartItemMutation,
+  useUpdateCartItemQuantityMutation,
+} from '@/hooks/cart'
+import { cn } from '@/utils/cn'
 import { formatToRM } from '@/utils/currency'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
 import {
@@ -27,20 +34,51 @@ const relatedProducts = [
 export default function Cart() {
   const { data: cartItems, isLoading, isError } = useCartItemsQuery()
   const deleteCartItemMutation = useDeleteCartItemMutation()
+  const updateCartItemQuantityMutation = useUpdateCartItemQuantityMutation()
 
-  const subtotal =
-    cartItems?.reduce(
-      (total, item) => total + item.selling_price * item.quantity,
-      0
-    ) ?? 0
+  const [localCartItems, setLocalCartItems] = useState(cartItems || [])
+
+  useEffect(() => {
+    if (!cartItems) return
+
+    setLocalCartItems([...cartItems])
+  }, [cartItems])
+
+  const subtotal = localCartItems.reduce(
+    (total, item) => total + item.original_price * item.quantity,
+    0
+  )
 
   // 10 (West, 300 free), 15 (East, 350 free), 25 (Singapore, 500 free)
   const shippingEstimate = 10
-  const totalDiscount = 0
-  const orderTotal = subtotal - shippingEstimate - totalDiscount
+  const totalDiscount = localCartItems.reduce(
+    (total, item) =>
+      total + (item.original_price - item.selling_price) * item.quantity,
+    0
+  )
+  const orderTotal = subtotal + shippingEstimate - totalDiscount
 
   const handleDelete = async (cartItemId: number) => {
     deleteCartItemMutation.mutate(cartItemId)
+  }
+
+  const handleQuantityChange = async ({
+    cartItemId,
+    quantity,
+  }: {
+    cartItemId: number
+    quantity: number
+  }) => {
+    const currentItem = localCartItems.find((item) => item.id === cartItemId)
+
+    if (currentItem && currentItem.quantity === quantity) return
+
+    const updatedCartItems = localCartItems.map((item) =>
+      item.id === cartItemId ? { ...item, quantity } : item
+    )
+    setLocalCartItems(updatedCartItems)
+
+    updateCartItemQuantityMutation.mutate({ cartItemId, quantity })
   }
 
   return (
@@ -98,9 +136,9 @@ export default function Cart() {
                 ))}
               {!isLoading &&
                 !isError &&
-                cartItems &&
-                cartItems.length > 0 &&
-                cartItems.map((item, index) => (
+                localCartItems &&
+                localCartItems.length > 0 &&
+                localCartItems.map((item, index) => (
                   <li key={item.id} className="flex py-6 sm:py-10">
                     <div className="shrink-0">
                       <img
@@ -131,7 +169,14 @@ export default function Cart() {
                               </p>
                             ) : null}
                           </div>
-                          <p className="mt-1 text-sm font-medium text-gray-900">
+                          <p
+                            className={cn(
+                              item.original_price - item.selling_price > 0
+                                ? 'text-red-800'
+                                : 'text-gray-900',
+                              'mt-1 text-sm font-medium'
+                            )}
+                          >
                             {formatToRM(item.selling_price)}
                           </p>
                         </div>
@@ -143,16 +188,22 @@ export default function Cart() {
                               name={`quantity-${index}`}
                               aria-label={`Quantity, ${item.name}`}
                               className="col-start-1 row-start-1 appearance-none rounded-md bg-white py-1.5 pl-3 pr-8 text-base text-gray-900 outline outline-1 -outline-offset-1 outline-gray-300 focus:outline focus:outline-2 focus:-outline-offset-2 focus:outline-black sm:text-sm/6"
-                              defaultValue={item.quantity}
+                              value={item.quantity}
+                              onChange={(e) =>
+                                handleQuantityChange({
+                                  cartItemId: item.id,
+                                  quantity: parseInt(e.target.value),
+                                })
+                              }
                             >
-                              <option value={1}>1</option>
-                              <option value={2}>2</option>
-                              <option value={3}>3</option>
-                              <option value={4}>4</option>
-                              <option value={5}>5</option>
-                              <option value={6}>6</option>
-                              <option value={7}>7</option>
-                              <option value={8}>8</option>
+                              {Array.from(
+                                { length: Math.min(item.available_stock, 10) },
+                                (_, i) => i + 1
+                              ).map((value) => (
+                                <option key={value} value={value}>
+                                  {value}
+                                </option>
+                              ))}
                             </select>
                             <ChevronDownIcon
                               aria-hidden="true"
@@ -200,15 +251,18 @@ export default function Cart() {
                 ))}
             </ul>
 
-            {!isLoading && !isError && cartItems && cartItems.length <= 0 && (
-              <div>
-                <p>Your shopping cart is empty.</p>
-              </div>
-            )}
+            {!isLoading &&
+              !isError &&
+              localCartItems &&
+              localCartItems.length <= 0 && (
+                <div>
+                  <p>Your shopping cart is empty.</p>
+                </div>
+              )}
           </section>
 
           {/* Order summary */}
-          {cartItems && cartItems.length > 0 && (
+          {localCartItems && localCartItems.length > 0 && (
             <section
               aria-labelledby="summary-heading"
               className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
@@ -290,7 +344,7 @@ export default function Cart() {
         </form>
 
         {/* Related products */}
-        {cartItems && cartItems.length > 0 && (
+        {localCartItems && localCartItems.length > 0 && (
           <section aria-labelledby="related-heading" className="mt-24">
             <h2
               id="related-heading"
