@@ -1,11 +1,12 @@
 'use client'
 import { useParams } from 'next/navigation'
-import { useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import ProductCard from '@/components/product-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCategoryQuery } from '@/hooks/categories'
 import { useProductsByCategoryQuery } from '@/hooks/products'
+import { ProductColour, ProductSize } from '@/types/product'
 import {
   Dialog,
   DialogBackdrop,
@@ -21,33 +22,6 @@ import {
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 
-const filters = [
-  {
-    id: 'colours',
-    name: 'Colours',
-    options: [
-      { value: 'white', label: 'White' },
-      { value: 'black', label: 'Black' },
-      { value: 'grey', label: 'Grey' },
-      { value: 'blue', label: 'Blue' },
-      { value: 'olive', label: 'Olive' },
-      { value: 'tan', label: 'Tan' },
-    ],
-  },
-  {
-    id: 'sizes',
-    name: 'Sizes',
-    options: [
-      { value: 'xs', label: 'XS' },
-      { value: 's', label: 'S' },
-      { value: 'm', label: 'M' },
-      { value: 'l', label: 'L' },
-      { value: 'xl', label: 'XL' },
-      { value: '2xl', label: '2XL' },
-    ],
-  },
-]
-
 export default function Category() {
   const { slug } = useParams<{ slug: string }>()
   const {
@@ -62,17 +36,54 @@ export default function Category() {
   } = useProductsByCategoryQuery(slug)
 
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-  const [sizeFilterOptions, setSizeFilterOptions] = useState<string[]>([])
+  const [colourFilterOptions, setColourFilterOptions] = useState<
+    ProductColour[]
+  >([])
+  const [sizeFilterOptions, setSizeFilterOptions] = useState<ProductSize[]>([])
+  const [selectedColours, setSelectedColours] = useState<string[]>([])
+  const [selectedSizes, setSelectedSizes] = useState<string[]>([])
 
-  // useEffect(() => {
-  //   if (!products || products.length <= 0) return
+  const filteredProducts = useMemo(() => {
+    if (!products) return []
 
-  //   const uniqueSizes = Array.from(
-  //     new Set(products.flatMap((product) => product.available_sizes))
-  //   )
+    return products.filter((product) => {
+      const colourMatch =
+        selectedColours.length === 0 ||
+        (product.available_colours as ProductColour[]).some((c) =>
+          selectedColours.includes(c.name)
+        )
+      const sizeMatch =
+        selectedSizes.length === 0 ||
+        (product.available_sizes as ProductSize[]).some((s) =>
+          selectedSizes.includes(s.name)
+        )
 
-  //   setSizeFilterOptions(uniqueSizes)
-  // }, [products])
+      return colourMatch && sizeMatch
+    })
+  }, [products, selectedColours, selectedSizes])
+
+  useEffect(() => {
+    if (!products || products.length <= 0) return
+
+    const uniqueSizes = Array.from(
+      new Map(
+        products
+          .flatMap((product) => product.available_sizes as ProductSize[])
+          .map((size) => [size.id, size])
+      ).values()
+    )
+
+    const uniqueColours = Array.from(
+      new Map(
+        products
+          .flatMap((product) => product.available_colours as ProductColour[])
+          .map((colour) => [colour.id, colour])
+      ).values()
+    )
+
+    setSizeFilterOptions(uniqueSizes)
+    setColourFilterOptions(uniqueColours)
+  }, [products])
 
   return (
     <div>
@@ -112,7 +123,7 @@ export default function Category() {
               >
                 <h3 className="-mx-2 -my-3 flow-root">
                   <DisclosureButton className="group flex w-full items-center justify-between bg-white px-2 py-3 text-sm text-gray-400">
-                    <span className="font-medium text-gray-900">Sizes</span>
+                    <span className="font-medium text-gray-900">Colours</span>
                     <span className="ml-6 flex items-center">
                       <ChevronDownIcon
                         aria-hidden="true"
@@ -123,16 +134,24 @@ export default function Category() {
                 </h3>
                 <DisclosurePanel className="pt-6">
                   <div className="space-y-6">
-                    {sizeFilterOptions.map((option, optionIdx) => (
-                      <div key={option} className="flex gap-3">
+                    {colourFilterOptions.map((option, index) => (
+                      <div key={option.id} className="flex gap-3">
                         <div className="flex h-5 shrink-0 items-center">
                           <div className="group grid size-4 grid-cols-1">
                             <input
-                              defaultValue={option}
-                              id={`filter-mobile-sizes-${optionIdx}`}
-                              name={`sizes[]`}
+                              id={`filter-mobile-sizes-${index}`}
                               type="checkbox"
                               className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                              value={option.name}
+                              checked={selectedColours.includes(option.name)}
+                              onChange={(e) => {
+                                const value = e.target.value
+                                setSelectedColours((prev) =>
+                                  prev.includes(value)
+                                    ? prev.filter((name) => name !== value)
+                                    : [...prev, value]
+                                )
+                              }}
                             />
                             <svg
                               fill="none"
@@ -157,10 +176,79 @@ export default function Category() {
                           </div>
                         </div>
                         <label
-                          htmlFor={`filter-mobile-sizes-${optionIdx}`}
+                          htmlFor={`filter-mobile-sizes-${index}`}
                           className="ml-3 text-sm text-gray-500"
                         >
-                          {option}
+                          {option.name}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </DisclosurePanel>
+              </Disclosure>
+              <Disclosure
+                as="div"
+                className="border-t border-gray-200 px-4 py-6"
+              >
+                <h3 className="-mx-2 -my-3 flow-root">
+                  <DisclosureButton className="group flex w-full items-center justify-between bg-white px-2 py-3 text-sm text-gray-400">
+                    <span className="font-medium text-gray-900">Sizes</span>
+                    <span className="ml-6 flex items-center">
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="size-5 rotate-0 transform group-data-open:-rotate-180"
+                      />
+                    </span>
+                  </DisclosureButton>
+                </h3>
+                <DisclosurePanel className="pt-6">
+                  <div className="space-y-6">
+                    {sizeFilterOptions.map((option, index) => (
+                      <div key={option.id} className="flex gap-3">
+                        <div className="flex h-5 shrink-0 items-center">
+                          <div className="group grid size-4 grid-cols-1">
+                            <input
+                              id={`filter-mobile-sizes-${index}`}
+                              type="checkbox"
+                              className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                              value={option.name}
+                              checked={selectedSizes.includes(option.name)}
+                              onChange={(e) => {
+                                const value = e.target.value
+                                setSelectedSizes((prev) =>
+                                  prev.includes(value)
+                                    ? prev.filter((name) => name !== value)
+                                    : [...prev, value]
+                                )
+                              }}
+                            />
+                            <svg
+                              fill="none"
+                              viewBox="0 0 14 14"
+                              className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                            >
+                              <path
+                                d="M3 8L6 11L11 3.5"
+                                strokeWidth={2}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="opacity-0 group-has-checked:opacity-100"
+                              />
+                              <path
+                                d="M3 7H11"
+                                strokeWidth={2}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="opacity-0 group-has-indeterminate:opacity-100"
+                              />
+                            </svg>
+                          </div>
+                        </div>
+                        <label
+                          htmlFor={`filter-mobile-sizes-${index}`}
+                          className="ml-3 text-sm text-gray-500"
+                        >
+                          {option.name}
                         </label>
                       </div>
                     ))}
@@ -228,10 +316,12 @@ export default function Category() {
                 <Popover id="menu" className="relative inline-block text-left">
                   <div>
                     <PopoverButton className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                      <span>Sizes</span>
-                      <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700 tabular-nums">
-                        1
-                      </span>
+                      <span>Colours</span>
+                      {selectedColours.length > 0 && (
+                        <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700 tabular-nums">
+                          {selectedColours.length}
+                        </span>
+                      )}
                       <ChevronDownIcon
                         aria-hidden="true"
                         className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
@@ -244,16 +334,24 @@ export default function Category() {
                     className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
                   >
                     <form className="space-y-4">
-                      {sizeFilterOptions.map((option, optionIdx) => (
-                        <div key={option} className="flex gap-3">
+                      {colourFilterOptions.map((option, index) => (
+                        <div key={option.id} className="flex gap-3">
                           <div className="flex h-5 shrink-0 items-center">
                             <div className="group grid size-4 grid-cols-1">
                               <input
-                                defaultValue={option}
-                                id={`filter-sizes-${optionIdx}`}
-                                name={`sizes[]`}
+                                id={`filter-colour-${index}`}
                                 type="checkbox"
                                 className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                                value={option.name}
+                                checked={selectedColours.includes(option.name)}
+                                onChange={(e) => {
+                                  const value = e.target.value
+                                  setSelectedColours((prev) =>
+                                    prev.includes(value)
+                                      ? prev.filter((name) => name !== value)
+                                      : [...prev, value]
+                                  )
+                                }}
                               />
                               <svg
                                 fill="none"
@@ -278,10 +376,83 @@ export default function Category() {
                             </div>
                           </div>
                           <label
-                            htmlFor={`filter-sizes-${optionIdx}`}
+                            htmlFor={`filter-colour-${index}`}
                             className="pr-6 text-sm font-medium whitespace-nowrap text-gray-900"
                           >
-                            {option}
+                            {option.name}
+                          </label>
+                        </div>
+                      ))}
+                    </form>
+                  </PopoverPanel>
+                </Popover>
+                <Popover id="menu" className="relative inline-block text-left">
+                  <div>
+                    <PopoverButton className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      <span>Sizes</span>
+                      {selectedSizes.length > 0 && (
+                        <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700 tabular-nums">
+                          {selectedSizes.length}
+                        </span>
+                      )}
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
+                      />
+                    </PopoverButton>
+                  </div>
+
+                  <PopoverPanel
+                    transition
+                    className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
+                  >
+                    <form className="space-y-4">
+                      {sizeFilterOptions.map((option, index) => (
+                        <div key={option.id} className="flex gap-3">
+                          <div className="flex h-5 shrink-0 items-center">
+                            <div className="group grid size-4 grid-cols-1">
+                              <input
+                                id={`filter-size-${index}`}
+                                type="checkbox"
+                                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                                value={option.name}
+                                checked={selectedSizes.includes(option.name)}
+                                onChange={(e) => {
+                                  const value = e.target.value
+                                  setSelectedSizes((prev) =>
+                                    prev.includes(value)
+                                      ? prev.filter((name) => name !== value)
+                                      : [...prev, value]
+                                  )
+                                }}
+                              />
+                              <svg
+                                fill="none"
+                                viewBox="0 0 14 14"
+                                className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                              >
+                                <path
+                                  d="M3 8L6 11L11 3.5"
+                                  strokeWidth={2}
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="opacity-0 group-has-[:checked]:opacity-100"
+                                />
+                                <path
+                                  d="M3 7H11"
+                                  strokeWidth={2}
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="opacity-0 group-has-[:indeterminate]:opacity-100"
+                                />
+                              </svg>
+                            </div>
+                          </div>
+                          <label
+                            htmlFor={`filter-size-${index}`}
+                            className="pr-6 text-sm font-medium whitespace-nowrap text-gray-900"
+                          >
+                            {option.name}
                           </label>
                         </div>
                       ))}
@@ -328,8 +499,8 @@ export default function Category() {
 
               {!isProductsLoading &&
                 !isProductsError &&
-                products &&
-                products.map((product) => (
+                filteredProducts &&
+                filteredProducts.map((product) => (
                   <ProductCard
                     key={product.code}
                     id={product.id}

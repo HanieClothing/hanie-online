@@ -3,14 +3,8 @@ import {
   getProductsByCategory,
   getProductVariantsByCode,
 } from '@/queries/products'
-import {
-  ProductColour,
-  ProductRecommendation,
-  ProductSize,
-  TransformedProduct,
-} from '@/types/product'
+import { ProductRecommendation, TransformedProduct } from '@/types/product'
 import { useQuery } from '@tanstack/react-query'
-
 import useSupabase from './supabase'
 
 export function useProductsByCategoryQuery(categorySlug: string) {
@@ -38,8 +32,8 @@ export function useProductByCodeQuery(code: string) {
       if (data.length === 0) return
 
       const base = data[0]
-      const colourMap = new Map<string, ProductColour>()
-      const sizeMap = new Map<string, ProductSize>()
+      const colourMap = new Map<string, { name: string; hexCode: string }>()
+      const sizeMap = new Map<string, { name: string; description: string }>()
       const images: Record<string, string[]> = {}
 
       data.forEach((item) => {

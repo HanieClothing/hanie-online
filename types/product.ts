@@ -1,11 +1,13 @@
 export type ProductSize = {
+  id: number
   name: string
-  description: string
+  sort_order: number
 }
 
 export type ProductColour = {
+  id: number
   name: string
-  hexCode: string
+  hex_code: string
 }
 
 export type Product = {
@@ -40,8 +42,14 @@ export type TransformedProduct = {
   sellingPrice: number
   statusId: number | null
   variants: ProductVariant[]
-  availableColours: ProductColour[]
-  availableSizes: ProductSize[]
+  availableColours: {
+    name: string
+    hexCode: string
+  }[]
+  availableSizes: {
+    name: string
+    description: string
+  }[]
   images: Record<string, string[]>
 }
 
@@ -50,16 +58,8 @@ export type ProductRecommendation = {
   code: string
   name: string
   image_url: string
-  available_colours: {
-    id: number
-    name: string
-    hex_code: string
-  }[]
-  available_sizes: {
-    id: number
-    name: string
-    sort_order: number
-  }[]
+  available_colours: ProductColour[]
+  available_sizes: ProductSize[]
   original_price: number
   selling_price: number
 }
