@@ -78,9 +78,14 @@ export default function Product() {
                   <h1 className="text-[30px] font-medium text-gray-900">
                     {product.name}
                   </h1>
-                  <p className="text-xl font-medium text-gray-900">
-                    {formatToRM(product.sellingPrice)}
-                  </p>
+                  <div>
+                    <p className="text-xl font-medium text-red-800">
+                      {formatToRM(product.sellingPrice)}
+                    </p>
+                    <p className="text-sm text-right line-through text-gray-400">
+                      {formatToRM(product.originalPrice)}
+                    </p>
+                  </div>
                 </>
               )}
             </div>
