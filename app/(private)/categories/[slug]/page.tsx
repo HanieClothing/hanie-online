@@ -50,8 +50,6 @@ const filters = [
 
 export default function Category() {
   const { slug } = useParams<{ slug: string }>()
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
-
   const {
     data: category,
     isLoading: isCategoryLoading,
@@ -62,6 +60,19 @@ export default function Category() {
     isLoading: isProductsLoading,
     isError: isProductsError,
   } = useProductsByCategoryQuery(slug)
+
+  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
+  const [sizeFilterOptions, setSizeFilterOptions] = useState<string[]>([])
+
+  // useEffect(() => {
+  //   if (!products || products.length <= 0) return
+
+  //   const uniqueSizes = Array.from(
+  //     new Set(products.flatMap((product) => product.available_sizes))
+  //   )
+
+  //   setSizeFilterOptions(uniqueSizes)
+  // }, [products])
 
   return (
     <div>
@@ -95,72 +106,67 @@ export default function Category() {
 
             {/* Filters */}
             <form className="mt-4">
-              {filters.map((section) => (
-                <Disclosure
-                  key={section.name}
-                  as="div"
-                  className="border-t border-gray-200 px-4 py-6"
-                >
-                  <h3 className="-mx-2 -my-3 flow-root">
-                    <DisclosureButton className="group flex w-full items-center justify-between bg-white px-2 py-3 text-sm text-gray-400">
-                      <span className="font-medium text-gray-900">
-                        {section.name}
-                      </span>
-                      <span className="ml-6 flex items-center">
-                        <ChevronDownIcon
-                          aria-hidden="true"
-                          className="size-5 rotate-0 transform group-data-open:-rotate-180"
-                        />
-                      </span>
-                    </DisclosureButton>
-                  </h3>
-                  <DisclosurePanel className="pt-6">
-                    <div className="space-y-6">
-                      {section.options.map((option, optionIdx) => (
-                        <div key={option.value} className="flex gap-3">
-                          <div className="flex h-5 shrink-0 items-center">
-                            <div className="group grid size-4 grid-cols-1">
-                              <input
-                                defaultValue={option.value}
-                                id={`filter-mobile-${section.id}-${optionIdx}`}
-                                name={`${section.id}[]`}
-                                type="checkbox"
-                                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+              <Disclosure
+                as="div"
+                className="border-t border-gray-200 px-4 py-6"
+              >
+                <h3 className="-mx-2 -my-3 flow-root">
+                  <DisclosureButton className="group flex w-full items-center justify-between bg-white px-2 py-3 text-sm text-gray-400">
+                    <span className="font-medium text-gray-900">Sizes</span>
+                    <span className="ml-6 flex items-center">
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="size-5 rotate-0 transform group-data-open:-rotate-180"
+                      />
+                    </span>
+                  </DisclosureButton>
+                </h3>
+                <DisclosurePanel className="pt-6">
+                  <div className="space-y-6">
+                    {sizeFilterOptions.map((option, optionIdx) => (
+                      <div key={option} className="flex gap-3">
+                        <div className="flex h-5 shrink-0 items-center">
+                          <div className="group grid size-4 grid-cols-1">
+                            <input
+                              defaultValue={option}
+                              id={`filter-mobile-sizes-${optionIdx}`}
+                              name={`sizes[]`}
+                              type="checkbox"
+                              className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                            />
+                            <svg
+                              fill="none"
+                              viewBox="0 0 14 14"
+                              className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                            >
+                              <path
+                                d="M3 8L6 11L11 3.5"
+                                strokeWidth={2}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="opacity-0 group-has-checked:opacity-100"
                               />
-                              <svg
-                                fill="none"
-                                viewBox="0 0 14 14"
-                                className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
-                              >
-                                <path
-                                  d="M3 8L6 11L11 3.5"
-                                  strokeWidth={2}
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="opacity-0 group-has-checked:opacity-100"
-                                />
-                                <path
-                                  d="M3 7H11"
-                                  strokeWidth={2}
-                                  strokeLinecap="round"
-                                  strokeLinejoin="round"
-                                  className="opacity-0 group-has-indeterminate:opacity-100"
-                                />
-                              </svg>
-                            </div>
+                              <path
+                                d="M3 7H11"
+                                strokeWidth={2}
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="opacity-0 group-has-indeterminate:opacity-100"
+                              />
+                            </svg>
                           </div>
-                          <label
-                            htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                            className="ml-3 text-sm text-gray-500"
-                          >
-                            {option.label}
-                          </label>
                         </div>
-                      ))}
-                    </div>
-                  </DisclosurePanel>
-                </Disclosure>
-              ))}
+                        <label
+                          htmlFor={`filter-mobile-sizes-${optionIdx}`}
+                          className="ml-3 text-sm text-gray-500"
+                        >
+                          {option}
+                        </label>
+                      </div>
+                    ))}
+                  </div>
+                </DisclosurePanel>
+              </Disclosure>
             </form>
           </DialogPanel>
         </div>
@@ -219,77 +225,69 @@ export default function Category() {
               </button>
 
               <PopoverGroup className="hidden sm:flex sm:items-baseline sm:space-x-8">
-                {filters.map((section, sectionIdx) => (
-                  <Popover
-                    key={section.name}
-                    id="menu"
-                    className="relative inline-block text-left"
-                  >
-                    <div>
-                      <PopoverButton className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                        <span>{section.name}</span>
-                        {sectionIdx === 0 ? (
-                          <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700 tabular-nums">
-                            1
-                          </span>
-                        ) : null}
-                        <ChevronDownIcon
-                          aria-hidden="true"
-                          className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
-                        />
-                      </PopoverButton>
-                    </div>
+                <Popover id="menu" className="relative inline-block text-left">
+                  <div>
+                    <PopoverButton className="group inline-flex items-center justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                      <span>Sizes</span>
+                      <span className="ml-1.5 rounded-sm bg-gray-200 px-1.5 py-0.5 text-xs font-semibold text-gray-700 tabular-nums">
+                        1
+                      </span>
+                      <ChevronDownIcon
+                        aria-hidden="true"
+                        className="-mr-1 ml-1 size-5 shrink-0 text-gray-400 group-hover:text-gray-500"
+                      />
+                    </PopoverButton>
+                  </div>
 
-                    <PopoverPanel
-                      transition
-                      className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
-                    >
-                      <form className="space-y-4">
-                        {section.options.map((option, optionIdx) => (
-                          <div key={option.value} className="flex gap-3">
-                            <div className="flex h-5 shrink-0 items-center">
-                              <div className="group grid size-4 grid-cols-1">
-                                <input
-                                  defaultValue={option.value}
-                                  id={`filter-${section.id}-${optionIdx}`}
-                                  name={`${section.id}[]`}
-                                  type="checkbox"
-                                  className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                  <PopoverPanel
+                    transition
+                    className="absolute right-0 z-10 mt-2 origin-top-right rounded-md bg-white p-4 ring-1 shadow-2xl ring-black/5 transition focus:outline-hidden data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[enter]:ease-out data-[leave]:duration-75 data-[leave]:ease-in"
+                  >
+                    <form className="space-y-4">
+                      {sizeFilterOptions.map((option, optionIdx) => (
+                        <div key={option} className="flex gap-3">
+                          <div className="flex h-5 shrink-0 items-center">
+                            <div className="group grid size-4 grid-cols-1">
+                              <input
+                                defaultValue={option}
+                                id={`filter-sizes-${optionIdx}`}
+                                name={`sizes[]`}
+                                type="checkbox"
+                                className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                              />
+                              <svg
+                                fill="none"
+                                viewBox="0 0 14 14"
+                                className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                              >
+                                <path
+                                  d="M3 8L6 11L11 3.5"
+                                  strokeWidth={2}
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="opacity-0 group-has-[:checked]:opacity-100"
                                 />
-                                <svg
-                                  fill="none"
-                                  viewBox="0 0 14 14"
-                                  className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
-                                >
-                                  <path
-                                    d="M3 8L6 11L11 3.5"
-                                    strokeWidth={2}
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="opacity-0 group-has-[:checked]:opacity-100"
-                                  />
-                                  <path
-                                    d="M3 7H11"
-                                    strokeWidth={2}
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    className="opacity-0 group-has-[:indeterminate]:opacity-100"
-                                  />
-                                </svg>
-                              </div>
+                                <path
+                                  d="M3 7H11"
+                                  strokeWidth={2}
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="opacity-0 group-has-[:indeterminate]:opacity-100"
+                                />
+                              </svg>
                             </div>
-                            <label
-                              htmlFor={`filter-${section.id}-${optionIdx}`}
-                              className="pr-6 text-sm font-medium whitespace-nowrap text-gray-900"
-                            >
-                              {option.label}
-                            </label>
                           </div>
-                        ))}
-                      </form>
-                    </PopoverPanel>
-                  </Popover>
-                ))}
+                          <label
+                            htmlFor={`filter-sizes-${optionIdx}`}
+                            className="pr-6 text-sm font-medium whitespace-nowrap text-gray-900"
+                          >
+                            {option}
+                          </label>
+                        </div>
+                      ))}
+                    </form>
+                  </PopoverPanel>
+                </Popover>
               </PopoverGroup>
             </div>
           </section>
@@ -338,8 +336,20 @@ export default function Category() {
                     code={product.code}
                     name={product.name}
                     imageUrl={product.image_url}
-                    availableColours={product.available_colours}
-                    availableSizes={product.available_sizes}
+                    availableColours={
+                      product.available_colours as {
+                        id: number
+                        name: string
+                        hex_code: string
+                      }[]
+                    }
+                    availableSizes={
+                      product.available_sizes as {
+                        id: number
+                        name: string
+                        sort_order: number
+                      }[]
+                    }
                     originalPrice={product.original_price}
                     sellingPrice={product.selling_price}
                   />

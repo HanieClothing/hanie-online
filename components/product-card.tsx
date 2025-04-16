@@ -1,5 +1,6 @@
 'use client'
 import Link from 'next/link'
+
 import { cn } from '@/utils/cn'
 import { formatToRM } from '@/utils/currency'
 
@@ -8,8 +9,8 @@ type Props = {
   code: string
   name: string
   imageUrl: string
-  availableColours: string[]
-  availableSizes: string[]
+  availableColours: { id: number; name: string; hex_code: string }[]
+  availableSizes: { id: number; name: string; sort_order: number }[]
   originalPrice: number
   sellingPrice: number
 }
@@ -45,11 +46,11 @@ function ProductCard({
             >
               {availableColours.map((colour) => (
                 <li
-                  key={colour}
-                  style={{ backgroundColor: colour }}
+                  key={colour.id}
+                  style={{ backgroundColor: colour.hex_code }}
                   className="size-4 rounded-full border border-black/10"
                 >
-                  <span className="sr-only">{colour}</span>
+                  <span className="sr-only">{colour.name}</span>
                 </li>
               ))}
             </ul>
@@ -61,8 +62,8 @@ function ProductCard({
               className="flex items-center justify-start space-x-2 pt-2"
             >
               {availableSizes.map((size) => (
-                <li key={size} className="text-gray-500 text-sm">
-                  <span>{size}</span>
+                <li key={size.id} className="text-gray-500 text-sm">
+                  <span>{size.name}</span>
                 </li>
               ))}
             </ul>

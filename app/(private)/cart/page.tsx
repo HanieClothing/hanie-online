@@ -60,6 +60,11 @@ export default function Cart() {
   const orderTotal = subtotal + shippingEstimate - totalDiscount
 
   const handleDelete = async (cartItemId: number) => {
+    const updatedCartItems = localCartItems.filter(
+      (item) => item.id !== cartItemId
+    )
+    setLocalCartItems(updatedCartItems)
+
     deleteCartItemMutation.mutate(cartItemId)
   }
 

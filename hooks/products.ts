@@ -3,7 +3,12 @@ import {
   getProductsByCategory,
   getProductVariantsByCode,
 } from '@/queries/products'
-import { ProductColour, ProductSize, TransformedProduct } from '@/types/product'
+import {
+  ProductColour,
+  ProductRecommendation,
+  ProductSize,
+  TransformedProduct,
+} from '@/types/product'
 import { useQuery } from '@tanstack/react-query'
 
 import useSupabase from './supabase'
@@ -101,7 +106,7 @@ export function useProductRecommendationsQuery(productCode: string) {
 
   const queryFn = async () => {
     return getProductRecommendations(client, productCode).then(
-      (result) => result.data
+      (result) => result.data as ProductRecommendation[]
     )
   }
 

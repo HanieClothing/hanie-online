@@ -618,8 +618,8 @@ export type Database = {
           code: string
           name: string
           image_url: string
-          available_colours: string[]
-          available_sizes: string[]
+          available_colours: Json
+          available_sizes: Json
           original_price: number
           selling_price: number
         }[]
@@ -653,17 +653,12 @@ export type Database = {
         Returns: {
           id: number
           code: string
-          category: string
           name: string
-          purchased_price: number
+          image_url: string
+          available_colours: Json
+          available_sizes: Json
           original_price: number
           selling_price: number
-          image_url: string
-          quantity: number
-          available_colours: string[]
-          available_sizes: string[]
-          status_id: number
-          status: string
         }[]
       }
       get_product_variants_by_code: {
@@ -715,8 +710,8 @@ export type Database = {
           selling_price: number
           image_url: string
           quantity: number
-          available_colours: string[]
-          available_sizes: string[]
+          available_colours: Json
+          available_sizes: Json
           status_id: number
           status: string
         }[]

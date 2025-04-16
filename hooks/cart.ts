@@ -4,6 +4,7 @@ import {
   updateCartItemQuantity,
 } from '@/mutations/cart'
 import { getCartItems, getCartRecommendations } from '@/queries/cart'
+import { CartRecommendation } from '@/types/cart'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import useSupabase from './supabase'
@@ -86,7 +87,9 @@ export function useCartRecommendationsQuery() {
   const queryKey = ['cart_recommendations']
 
   const queryFn = async () => {
-    return getCartRecommendations(client).then((result) => result.data)
+    return getCartRecommendations(client).then(
+      (result) => result.data as CartRecommendation[]
+    )
   }
 
   return useQuery({ queryKey, queryFn })

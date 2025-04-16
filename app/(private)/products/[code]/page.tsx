@@ -22,6 +22,10 @@ export default function Product() {
   const [selectedColour, setSelectedColour] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
 
+  const hasDiscount = product
+    ? product.originalPrice - product.sellingPrice > 0
+    : false
+
   useEffect(() => {
     if (product?.availableColours?.length && !selectedColour) {
       setSelectedColour(product.availableColours[0].name)
@@ -92,12 +96,19 @@ export default function Product() {
                     {product.name}
                   </h1>
                   <div>
-                    <p className="text-xl font-medium text-red-800">
+                    <p
+                      className={cn(
+                        hasDiscount ? 'text-red-800' : 'text-black',
+                        'text-xl font-medium'
+                      )}
+                    >
                       {formatToRM(product.sellingPrice)}
                     </p>
-                    <p className="text-sm text-right line-through text-gray-400">
-                      {formatToRM(product.originalPrice)}
-                    </p>
+                    {hasDiscount && (
+                      <p className="text-sm text-right line-through text-gray-400">
+                        {formatToRM(product.originalPrice)}
+                      </p>
+                    )}
                   </div>
                 </>
               )}
