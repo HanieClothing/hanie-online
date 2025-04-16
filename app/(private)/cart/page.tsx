@@ -1,12 +1,14 @@
 'use client'
 import { useEffect, useState } from 'react'
 
+import { Checkbox } from '@/components/ui/checkbox'
 import { Skeleton } from '@/components/ui/skeleton'
 import {
   useCartItemsQuery,
   useDeleteCartItemMutation,
   useUpdateCartItemQuantityMutation,
 } from '@/hooks/cart'
+import { LocalCartItem } from '@/types/cart'
 import { cn } from '@/utils/cn'
 import { formatToRM } from '@/utils/currency'
 import { ChevronDownIcon } from '@heroicons/react/16/solid'
@@ -36,22 +38,33 @@ export default function Cart() {
   const deleteCartItemMutation = useDeleteCartItemMutation()
   const updateCartItemQuantityMutation = useUpdateCartItemQuantityMutation()
 
-  const [localCartItems, setLocalCartItems] = useState(cartItems || [])
+  const [localCartItems, setLocalCartItems] = useState<LocalCartItem[]>([])
+  const selectedLocalCartItems = localCartItems.filter(
+    (item) => item.isSelected
+  )
+
+  const toggleItemSelection = (itemId: number) => {
+    setLocalCartItems((prev) =>
+      prev.map((item) =>
+        item.id === itemId ? { ...item, isSelected: !item.isSelected } : item
+      )
+    )
+  }
 
   useEffect(() => {
-    if (!cartItems) return
+    if (isLoading || isError || !cartItems || cartItems.length <= 0) return
 
-    setLocalCartItems([...cartItems])
+    setLocalCartItems(cartItems.map((item) => ({ ...item, isSelected: false })))
   }, [cartItems])
 
-  const subtotal = localCartItems.reduce(
+  const subtotal = selectedLocalCartItems.reduce(
     (total, item) => total + item.original_price * item.quantity,
     0
   )
 
   // 10 (West, 300 free), 15 (East, 350 free), 25 (Singapore, 500 free)
-  const shippingEstimate = 10
-  const totalDiscount = localCartItems.reduce(
+  const shippingEstimate = selectedLocalCartItems.length > 0 ? 10 : 0
+  const totalDiscount = selectedLocalCartItems.reduce(
     (total, item) =>
       total + (item.original_price - item.selling_price) * item.quantity,
     0
@@ -140,7 +153,15 @@ export default function Cart() {
                 localCartItems.length > 0 &&
                 localCartItems.map((item, index) => (
                   <li key={item.id} className="flex py-6 sm:py-10">
-                    <div className="shrink-0">
+                    <div className="flex items-center">
+                      <Checkbox
+                        checked={item.isSelected}
+                        onClick={() => toggleItemSelection(item.id)}
+                        className="size-5 rounded transition-all duration-200"
+                      />
+                    </div>
+
+                    <div className="ml-4 shrink-0">
                       <img
                         alt={item.name}
                         src={item.image_url}
@@ -255,7 +276,7 @@ export default function Cart() {
               !isError &&
               localCartItems &&
               localCartItems.length <= 0 && (
-                <div>
+                <div className="mt-4 text-gray-500">
                   <p>Your shopping cart is empty.</p>
                 </div>
               )}
