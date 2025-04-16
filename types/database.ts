@@ -82,6 +82,7 @@ export type Database = {
       }
       categories: {
         Row: {
+          banner_image_url: string | null
           created_at: string
           description: string | null
           id: number
@@ -91,6 +92,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          banner_image_url?: string | null
           created_at?: string
           description?: string | null
           id?: number
@@ -100,6 +102,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          banner_image_url?: string | null
           created_at?: string
           description?: string | null
           id?: number
@@ -389,8 +392,9 @@ export type Database = {
           description: string | null
           id: number
           name: string
+          original_price: number
           purchased_price: number
-          selling_price: number
+          selling_price: number | null
           status_id: number | null
           subcategory_id: number | null
           supplier_id: number | null
@@ -403,8 +407,9 @@ export type Database = {
           description?: string | null
           id?: number
           name: string
+          original_price: number
           purchased_price: number
-          selling_price: number
+          selling_price?: number | null
           status_id?: number | null
           subcategory_id?: number | null
           supplier_id?: number | null
@@ -417,8 +422,9 @@ export type Database = {
           description?: string | null
           id?: number
           name?: string
+          original_price?: number
           purchased_price?: number
-          selling_price?: number
+          selling_price?: number | null
           status_id?: number | null
           subcategory_id?: number | null
           supplier_id?: number | null
@@ -649,6 +655,7 @@ export type Database = {
           category: string
           name: string
           purchased_price: number
+          original_price: number
           selling_price: number
           image_url: string
           quantity: number

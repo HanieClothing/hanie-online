@@ -167,8 +167,8 @@ export default function Category() {
       </Dialog>
 
       <main>
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-          <div className="py-24 text-center">
+        <div className="w-full">
+          <div>
             {isCategoryLoading && (
               <>
                 <Skeleton className="h-8 w-[250px] mx-auto" />
@@ -176,21 +176,34 @@ export default function Category() {
               </>
             )}
             {!isCategoryLoading && !isCategoryError && category && (
-              <>
-                <h1 className="text-4xl font-bold tracking-tight text-gray-900">
-                  {category.name}
-                </h1>
-                <p className="mx-auto mt-4 max-w-3xl text-base text-gray-500">
-                  {category.description}
-                </p>
-              </>
+              <div className="relative">
+                {category.banner_image_url ? (
+                  <img
+                    className="h-[500px] w-full object-cover"
+                    src={category.banner_image_url}
+                  />
+                ) : (
+                  <div className="bg-white h-[500px] w-full" />
+                )}
+
+                <div className="bg-black/50 absolute inset-0" />
+
+                <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
+                  <h1 className="text-4xl font-bold text-center tracking-tight text-gray-100">
+                    {category.name}
+                  </h1>
+                  <p className="mx-auto mt-4 max-w-3xl text-center text-base text-gray-100">
+                    {category.description}
+                  </p>
+                </div>
+              </div>
             )}
           </div>
 
           {/* Filters */}
           <section
             aria-labelledby="filter-heading"
-            className="border-t border-gray-200 pt-6"
+            className="border-t border-gray-200 pt-6 mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
           >
             <h2 id="filter-heading" className="sr-only">
               Product filters
@@ -282,7 +295,10 @@ export default function Category() {
           </section>
 
           {/* Product grid */}
-          <section aria-labelledby="products-heading" className="my-8">
+          <section
+            aria-labelledby="products-heading"
+            className="my-8 mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8"
+          >
             <h2 id="products-heading" className="sr-only">
               Products
             </h2>
@@ -326,39 +342,50 @@ export default function Category() {
                       src={product.image_url}
                       className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75 sm:aspect-[2/3]"
                     />
-                    <div className="mt-4 flex items-center justify-between text-base font-medium text-gray-900">
-                      <h3>{product.name}</h3>
-                      <p>{formatToRM(product.selling_price)}</p>
-                    </div>
-                    <div>
-                      <h4 className="sr-only">Available colours</h4>
-                      <ul
-                        role="list"
-                        className="flex items-center justify-start space-x-3 pt-2"
-                      >
-                        {product.available_colours.map((colour) => (
-                          <li
-                            key={colour}
-                            style={{ backgroundColor: colour }}
-                            className="size-4 rounded-full border border-black/10"
+                    <div className="mt-4 flex items-start justify-between text-base font-medium text-gray-900">
+                      <div>
+                        <h3>{product.name}</h3>
+
+                        <div>
+                          <h4 className="sr-only">Available colours</h4>
+                          <ul
+                            role="list"
+                            className="flex items-center justify-start space-x-3 pt-2"
                           >
-                            <span className="sr-only">{colour}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                    <div>
-                      <h4 className="sr-only">Available sizes</h4>
-                      <ul
-                        role="list"
-                        className="flex items-center justify-start space-x-2 pt-2"
-                      >
-                        {product.available_sizes.map((size) => (
-                          <li key={size} className="text-gray-500 text-sm">
-                            <span>{size}</span>
-                          </li>
-                        ))}
-                      </ul>
+                            {product.available_colours.map((colour) => (
+                              <li
+                                key={colour}
+                                style={{ backgroundColor: colour }}
+                                className="size-4 rounded-full border border-black/10"
+                              >
+                                <span className="sr-only">{colour}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                        <div>
+                          <h4 className="sr-only">Available sizes</h4>
+                          <ul
+                            role="list"
+                            className="flex items-center justify-start space-x-2 pt-2"
+                          >
+                            {product.available_sizes.map((size) => (
+                              <li key={size} className="text-gray-500 text-sm">
+                                <span>{size}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      </div>
+
+                      <div>
+                        <p className="text-red-800">
+                          {formatToRM(product.selling_price)}
+                        </p>
+                        <p className="text-xs text-right line-through text-gray-400">
+                          {formatToRM(product.original_price)}
+                        </p>
+                      </div>
                     </div>
                   </a>
                 ))}

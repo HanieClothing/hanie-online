@@ -28,10 +28,16 @@ export default function Cart() {
   const { data: cartItems, isLoading, isError } = useCartItemsQuery()
   const deleteCartItemMutation = useDeleteCartItemMutation()
 
-  const subtotal = 0
-  const shippingEstimate = 0
-  const taxEstimate = 0
-  const orderTotal = 0
+  const subtotal =
+    cartItems?.reduce(
+      (total, item) => total + item.selling_price * item.quantity,
+      0
+    ) ?? 0
+
+  // 10 (West, 300 free), 15 (East, 350 free), 25 (Singapore, 500 free)
+  const shippingEstimate = 10
+  const totalDiscount = 0
+  const orderTotal = subtotal - shippingEstimate - totalDiscount
 
   const handleDelete = async (cartItemId: number) => {
     deleteCartItemMutation.mutate(cartItemId)
@@ -218,7 +224,7 @@ export default function Cart() {
                 <div className="flex items-center justify-between">
                   <dt className="text-sm text-gray-600">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {formatToRM(subtotal)}
+                    {formatToRM(subtotal ?? 0)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
@@ -243,13 +249,13 @@ export default function Cart() {
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex text-sm text-gray-600">
-                    <span>Tax estimate</span>
+                    <span>Total Discount</span>
                     <a
                       href="#"
                       className="ml-2 shrink-0 text-gray-400 hover:text-gray-500"
                     >
                       <span className="sr-only">
-                        Learn more about how tax is calculated
+                        Learn more about how discount is calculated
                       </span>
                       <QuestionMarkCircleIcon
                         aria-hidden="true"
@@ -258,7 +264,7 @@ export default function Cart() {
                     </a>
                   </dt>
                   <dd className="text-sm font-medium text-gray-900">
-                    {formatToRM(taxEstimate)}
+                    {formatToRM(totalDiscount)}
                   </dd>
                 </div>
                 <div className="flex items-center justify-between border-t border-gray-200 pt-4">
