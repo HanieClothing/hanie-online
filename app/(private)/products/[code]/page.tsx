@@ -1,5 +1,5 @@
 'use client'
-import { CircleCheckIcon, Loader2Icon, XIcon } from 'lucide-react'
+import { CircleCheckIcon, Loader2Icon, XCircleIcon } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
@@ -10,6 +10,7 @@ import { useProductByCodeQuery } from '@/hooks/products'
 import { cn } from '@/utils/cn'
 import { formatToRM } from '@/utils/currency'
 import { Radio, RadioGroup } from '@headlessui/react'
+import { PostgrestError } from '@supabase/supabase-js'
 
 const relatedProducts = [
   {
@@ -74,10 +75,12 @@ export default function Product() {
         icon: <CircleCheckIcon fill="#000" className="text-white" />,
       })
     } catch (error) {
-      toast.error('Something went wrong.', {
-        id: toastId,
-        icon: <XIcon fill="#000" className="text-white" />,
-      })
+      if (error instanceof PostgrestError) {
+        toast.error(error.message, {
+          id: toastId,
+          icon: <XCircleIcon fill="#000" className="text-white" />,
+        })
+      }
     }
   }
 
