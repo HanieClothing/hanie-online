@@ -1,5 +1,7 @@
 import '../globals.css'
 
+import { Toaster } from 'react-hot-toast'
+
 import Footer from '@/components/footer'
 import Header from '@/components/header'
 import { QueryProvider } from '@/providers/QueryProvider'
@@ -18,6 +20,8 @@ export default function RootLayout({
           {children}
 
           <Footer />
+
+          <Toaster position="top-center" />
         </body>
       </html>
     </QueryProvider>

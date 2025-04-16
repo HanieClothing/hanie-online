@@ -1,6 +1,8 @@
 'use client'
+import { CircleCheckIcon, Loader2Icon, XIcon } from 'lucide-react'
 import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import toast from 'react-hot-toast'
 
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAddCartItemMutation } from '@/hooks/cart'
@@ -40,12 +42,12 @@ export default function Product() {
     e.preventDefault()
 
     if (!selectedColour) {
-      alert('Please select a colour.')
+      toast.error('Please select a colour.')
       return
     }
 
     if (!selectedSize) {
-      alert('Please select a size.')
+      toast.error('Please select a size.')
       return
     }
 
@@ -55,9 +57,28 @@ export default function Product() {
       (variant) =>
         variant.colour === selectedColour && variant.size === selectedSize
     )
-    if (!productVariant) return
+    if (!productVariant) {
+      toast.error('Selected variant not found.')
+      return
+    }
 
-    await addCartItemMutation.mutateAsync(productVariant.id)
+    const toastId = toast.loading('Adding to cart...', {
+      icon: <Loader2Icon />,
+    })
+
+    try {
+      await addCartItemMutation.mutateAsync(productVariant.id)
+
+      toast.success('Added to cart!', {
+        id: toastId,
+        icon: <CircleCheckIcon fill="#000" className="text-white" />,
+      })
+    } catch (error) {
+      toast.error('Something went wrong.', {
+        id: toastId,
+        icon: <XIcon fill="#000" className="text-white" />,
+      })
+    }
   }
 
   return (
