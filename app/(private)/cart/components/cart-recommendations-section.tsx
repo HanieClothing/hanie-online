@@ -1,30 +1,22 @@
 import ProductCard from '@/components/product-card'
-import { useProductRecommendationsQuery } from '@/hooks/products'
+import { useCartRecommendationsQuery } from '@/hooks/cart'
 
-type Props = {
-  code: string
-}
+function CartRecommendationsSection() {
+  const { data: cartRecommendations } = useCartRecommendationsQuery()
 
-function ProductRecommendationsSection({ code }: Props) {
-  const { data: productRecommendations } = useProductRecommendationsQuery(code)
-
-  if (!productRecommendations || productRecommendations.length <= 0)
-    return undefined
+  if (!cartRecommendations || cartRecommendations.length <= 0) return undefined
 
   return (
-    <section
-      aria-labelledby="product-recommendations"
-      className="mt-16 sm:mt-24"
-    >
+    <section aria-labelledby="cart-recommendations" className="mt-16 sm:mt-24">
       <h2
-        id="product-recommendations"
+        id="cart-recommendations"
         className="text-lg font-medium text-gray-900"
       >
-        Customers also purchased
+        You may also like&hellip;
       </h2>
 
       <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-        {productRecommendations?.map((product) => (
+        {cartRecommendations?.map((product) => (
           <ProductCard
             key={product.code}
             id={product.id}
@@ -42,4 +34,4 @@ function ProductRecommendationsSection({ code }: Props) {
   )
 }
 
-export default ProductRecommendationsSection
+export default CartRecommendationsSection

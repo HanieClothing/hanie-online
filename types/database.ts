@@ -611,6 +611,19 @@ export type Database = {
           available_stock: number
         }[]
       }
+      get_cart_recommendations: {
+        Args: Record<PropertyKey, never>
+        Returns: {
+          id: number
+          code: string
+          name: string
+          image_url: string
+          available_colours: string[]
+          available_sizes: string[]
+          original_price: number
+          selling_price: number
+        }[]
+      }
       get_cart_size: {
         Args: { user_id: string }
         Returns: number
@@ -681,7 +694,10 @@ export type Database = {
           category: string
           name: string
           purchased_price: number
+          original_price: number
           selling_price: number
+          status_id: number
+          image_url: string
           quantity: number
           available_colours: string[]
           available_sizes: string[]

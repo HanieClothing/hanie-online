@@ -332,7 +332,17 @@ export default function Category() {
                 !isProductsError &&
                 products &&
                 products.map((product) => (
-                  <ProductCard key={product.code} product={product} />
+                  <ProductCard
+                    key={product.code}
+                    id={product.id}
+                    code={product.code}
+                    name={product.name}
+                    imageUrl={product.image_url}
+                    availableColours={product.available_colours}
+                    availableSizes={product.available_sizes}
+                    originalPrice={product.original_price}
+                    sellingPrice={product.selling_price}
+                  />
                 ))}
             </div>
           </section>

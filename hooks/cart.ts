@@ -3,7 +3,7 @@ import {
   deleteCartItem,
   updateCartItemQuantity,
 } from '@/mutations/cart'
-import { getCartItems } from '@/queries/cart'
+import { getCartItems, getCartRecommendations } from '@/queries/cart'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import useSupabase from './supabase'
@@ -79,4 +79,15 @@ export function useUpdateCartItemQuantityMutation() {
       })
     },
   })
+}
+
+export function useCartRecommendationsQuery() {
+  const client = useSupabase()
+  const queryKey = ['cart_recommendations']
+
+  const queryFn = async () => {
+    return getCartRecommendations(client).then((result) => result.data)
+  }
+
+  return useQuery({ queryKey, queryFn })
 }
