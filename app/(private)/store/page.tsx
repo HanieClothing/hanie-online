@@ -1,7 +1,7 @@
-import CategoriesSection from './components/CategoriesSection'
-import CollectionsSection from './components/CollectionsSection'
-import HeroSection from './components/HeroSection'
-import IncentivesSection from './components/IncentivesSection'
+import CategoriesSection from './components/categories-section'
+import CollectionsSection from './components/collections-section'
+import HeroSection from './components/hero-section'
+import IncentivesSection from './components/incentives-section'
 
 export default function Store() {
   return (
