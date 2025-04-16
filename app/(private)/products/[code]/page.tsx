@@ -4,6 +4,12 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAddCartItemMutation } from '@/hooks/cart'
 import { useProductByCodeQuery } from '@/hooks/products'
@@ -258,6 +264,29 @@ export default function Product() {
                 Add to Cart
               </button>
             </form>
+
+            <Accordion
+              type="single"
+              collapsible
+              className="w-full mt-8 space-y-8"
+            >
+              <AccordionItem value="article-details">
+                <AccordionTrigger>Article Details</AccordionTrigger>
+                <AccordionContent>Article Details</AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="size-guides">
+                <AccordionTrigger>Size Guide</AccordionTrigger>
+                <AccordionContent>Size Guide</AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="care-instructions">
+                <AccordionTrigger>Care Instructions</AccordionTrigger>
+                <AccordionContent>Care Instructions</AccordionContent>
+              </AccordionItem>
+              <AccordionItem value="shipping-and-return">
+                <AccordionTrigger>Shipping &amp; Return</AccordionTrigger>
+                <AccordionContent>Shipping &amp; Return</AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
 
