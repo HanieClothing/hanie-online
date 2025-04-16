@@ -4,22 +4,19 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
-import ProductCard from '@/components/product-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAddCartItemMutation } from '@/hooks/cart'
-import {
-  useProductByCodeQuery,
-  useProductRecommendationsQuery,
-} from '@/hooks/products'
+import { useProductByCodeQuery } from '@/hooks/products'
 import { cn } from '@/utils/cn'
 import { formatToRM } from '@/utils/currency'
 import { Radio, RadioGroup } from '@headlessui/react'
 import { PostgrestError } from '@supabase/supabase-js'
 
+import ProductRecommendationsSection from './components/product-recommendations-section'
+
 export default function Product() {
   const { code } = useParams<{ code: string }>()
   const { data: product, isLoading, isError } = useProductByCodeQuery(code)
-  const { data: productRecommendations } = useProductRecommendationsQuery(code)
   const addCartItemMutation = useAddCartItemMutation()
 
   const [selectedColour, setSelectedColour] = useState('')
@@ -253,21 +250,7 @@ export default function Product() {
           </div>
         </div>
 
-        {/* Related products */}
-        <section aria-labelledby="related-heading" className="mt-16 sm:mt-24">
-          <h2
-            id="related-heading"
-            className="text-lg font-medium text-gray-900"
-          >
-            Customers also purchased
-          </h2>
-
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {productRecommendations?.map((product) => (
-              <ProductCard key={product.code} product={product} />
-            ))}
-          </div>
-        </section>
+        <ProductRecommendationsSection code={code} />
       </main>
     </div>
   )
