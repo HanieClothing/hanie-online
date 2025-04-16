@@ -2,10 +2,10 @@
 import { useParams } from 'next/navigation'
 import { useState } from 'react'
 
+import ProductCard from '@/components/product-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCategoryQuery } from '@/hooks/categories'
 import { useProductsByCategoryQuery } from '@/hooks/products'
-import { formatToRM } from '@/utils/currency'
 import {
   Dialog,
   DialogBackdrop,
@@ -332,62 +332,7 @@ export default function Category() {
                 !isProductsError &&
                 products &&
                 products.map((product) => (
-                  <a
-                    key={product.id}
-                    href={`/products/${product.code}`}
-                    className="group"
-                  >
-                    <img
-                      alt={'Product image'}
-                      src={product.image_url}
-                      className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75"
-                    />
-                    <div className="mt-4 flex items-start justify-between text-base font-medium text-gray-900">
-                      <div>
-                        <h3>{product.name}</h3>
-
-                        <div>
-                          <h4 className="sr-only">Available colours</h4>
-                          <ul
-                            role="list"
-                            className="flex items-center justify-start space-x-3 pt-2"
-                          >
-                            {product.available_colours.map((colour) => (
-                              <li
-                                key={colour}
-                                style={{ backgroundColor: colour }}
-                                className="size-4 rounded-full border border-black/10"
-                              >
-                                <span className="sr-only">{colour}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                        <div>
-                          <h4 className="sr-only">Available sizes</h4>
-                          <ul
-                            role="list"
-                            className="flex items-center justify-start space-x-2 pt-2"
-                          >
-                            {product.available_sizes.map((size) => (
-                              <li key={size} className="text-gray-500 text-sm">
-                                <span>{size}</span>
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      </div>
-
-                      <div>
-                        <p className="text-red-800">
-                          {formatToRM(product.selling_price)}
-                        </p>
-                        <p className="text-xs text-right line-through text-gray-400">
-                          {formatToRM(product.original_price)}
-                        </p>
-                      </div>
-                    </div>
-                  </a>
+                  <ProductCard key={product.code} product={product} />
                 ))}
             </div>
           </section>

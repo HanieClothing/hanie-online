@@ -15,3 +15,11 @@ export function getProductVariantsByCode(client: Client, code: string) {
     })
     .throwOnError()
 }
+
+export function getProductRecommendations(client: Client, productCode: string) {
+  return client
+    .rpc('get_product_recommendations', {
+      product_code: productCode,
+    })
+    .throwOnError()
+}

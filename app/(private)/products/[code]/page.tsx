@@ -4,32 +4,24 @@ import { useParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import toast from 'react-hot-toast'
 
+import ProductCard from '@/components/product-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useAddCartItemMutation } from '@/hooks/cart'
-import { useProductByCodeQuery } from '@/hooks/products'
+import {
+  useProductByCodeQuery,
+  useProductRecommendationsQuery,
+} from '@/hooks/products'
 import { cn } from '@/utils/cn'
 import { formatToRM } from '@/utils/currency'
 import { Radio, RadioGroup } from '@headlessui/react'
 import { PostgrestError } from '@supabase/supabase-js'
 
-const relatedProducts = [
-  {
-    id: 1,
-    name: 'Basic Tee',
-    href: '#',
-    imageSrc:
-      'https://tailwindcss.com/plus-assets/img/ecommerce-images/product-page-01-related-product-02.jpg',
-    imageAlt: "Front of men's Basic Tee in white.",
-    price: '$35',
-    colour: 'Aspen White',
-  },
-  // More products...
-]
-
 export default function Product() {
   const { code } = useParams<{ code: string }>()
   const { data: product, isLoading, isError } = useProductByCodeQuery(code)
+  const { data: productRecommendations } = useProductRecommendationsQuery(code)
   const addCartItemMutation = useAddCartItemMutation()
+
   const [selectedColour, setSelectedColour] = useState('')
   const [selectedSize, setSelectedSize] = useState('')
 
@@ -271,30 +263,8 @@ export default function Product() {
           </h2>
 
           <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {relatedProducts.map((relatedProduct) => (
-              <div key={relatedProduct.id} className="group relative">
-                <img
-                  alt={relatedProduct.imageAlt}
-                  src={relatedProduct.imageSrc}
-                  className="aspect-square w-full rounded-md object-cover group-hover:opacity-75 lg:aspect-auto lg:h-80"
-                />
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={relatedProduct.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {relatedProduct.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {relatedProduct.colour}
-                    </p>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {relatedProduct.price}
-                  </p>
-                </div>
-              </div>
+            {productRecommendations?.map((product) => (
+              <ProductCard key={product.code} product={product} />
             ))}
           </div>
         </section>

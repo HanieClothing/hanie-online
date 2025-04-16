@@ -1,4 +1,5 @@
 import {
+  getProductRecommendations,
   getProductsByCategory,
   getProductVariantsByCode,
 } from '@/queries/products'
@@ -89,6 +90,19 @@ export function useProductByCodeQuery(code: string) {
 
       return transformed
     })
+  }
+
+  return useQuery({ queryKey, queryFn })
+}
+
+export function useProductRecommendationsQuery(productCode: string) {
+  const client = useSupabase()
+  const queryKey = ['product_recommendations']
+
+  const queryFn = async () => {
+    return getProductRecommendations(client, productCode).then(
+      (result) => result.data
+    )
   }
 
   return useQuery({ queryKey, queryFn })
