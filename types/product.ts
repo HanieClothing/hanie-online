@@ -30,33 +30,15 @@ export type ProductVariant = {
   quantity: number
 }
 
-export type RawProduct = {
-  code: string
-  category_id: number
-  subcategory_id: number
-  name: string
-  description: string | null
-  purchased_price: number
-  selling_price: number
-  product_variant_id: number
-  images: string[]
-  colour: string
-  colour_hex: string
-  size: string
-  size_description: string
-  status_id: number | null
-  quantity: number
-}
-
 export type TransformedProduct = {
   code: string
   name: string
-  category_id: number
-  subcategory_id: number
+  categoryId: number
+  subcategoryId: number
   description: string | null
-  purchased_price: number
-  selling_price: number
-  status_id: number | null
+  originalPrice: number
+  sellingPrice: number
+  statusId: number | null
   variants: ProductVariant[]
   availableColours: ProductColour[]
   availableSizes: ProductSize[]

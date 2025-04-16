@@ -79,7 +79,7 @@ export default function Product() {
                     {product.name}
                   </h1>
                   <p className="text-xl font-medium text-gray-900">
-                    {formatToRM(product.selling_price)}
+                    {formatToRM(product.sellingPrice)}
                   </p>
                 </>
               )}

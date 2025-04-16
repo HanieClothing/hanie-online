@@ -1,4 +1,7 @@
-import { getProductByCode, getProductsByCategory } from '@/queries/products'
+import {
+  getProductsByCategory,
+  getProductVariantsByCode,
+} from '@/queries/products'
 import { ProductColour, ProductSize, TransformedProduct } from '@/types/product'
 import { useQuery } from '@tanstack/react-query'
 
@@ -22,7 +25,7 @@ export function useProductByCodeQuery(code: string) {
   const queryKey = ['product_by_code']
 
   const queryFn = async () => {
-    return getProductByCode(client, code).then((result) => {
+    return getProductVariantsByCode(client, code).then((result) => {
       const data = result.data
 
       if (!data) return
@@ -72,12 +75,12 @@ export function useProductByCodeQuery(code: string) {
       const transformed: TransformedProduct = {
         code: base.code,
         name: base.name,
-        category_id: base.category_id,
-        subcategory_id: base.subcategory_id,
+        categoryId: base.category_id,
+        subcategoryId: base.subcategory_id,
         description: base.description,
-        purchased_price: base.purchased_price,
-        selling_price: base.selling_price,
-        status_id: base.status_id,
+        originalPrice: base.original_price,
+        sellingPrice: base.selling_price,
+        statusId: base.status_id,
         variants,
         availableColours,
         availableSizes,

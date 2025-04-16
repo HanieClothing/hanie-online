@@ -8,9 +8,9 @@ export function getProductsByCategory(client: Client, categorySlug: string) {
     .throwOnError()
 }
 
-export function getProductByCode(client: Client, code: string) {
+export function getProductVariantsByCode(client: Client, code: string) {
   return client
-    .rpc('get_product_by_code', {
+    .rpc('get_product_variants_by_code', {
       product_code: code,
     })
     .throwOnError()

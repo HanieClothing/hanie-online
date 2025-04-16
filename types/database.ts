@@ -633,6 +633,26 @@ export type Database = {
           quantity: number
         }[]
       }
+      get_product_variants_by_code: {
+        Args: { product_code: string }
+        Returns: {
+          code: string
+          category_id: number
+          subcategory_id: number
+          name: string
+          description: string
+          original_price: number
+          selling_price: number
+          product_variant_id: number
+          colour: string
+          colour_hex: string
+          images: string[]
+          size: string
+          size_description: string
+          status_id: number
+          quantity: number
+        }[]
+      }
       get_products: {
         Args: Record<PropertyKey, never>
         Returns: {
