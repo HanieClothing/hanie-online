@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/carousel'
 import { useCollectionsQuery } from '@/hooks/collections'
 
-function HeroSection() {
+const HeroSection = () => {
   const { data: collections } = useCollectionsQuery()
 
   return (
@@ -20,7 +20,10 @@ function HeroSection() {
           loop: true,
           slidesToScroll: 1,
         }}
-        plugins={[Autoplay()]}
+        plugins={[Autoplay({
+          stopOnMouseEnter: true,
+          stopOnInteraction: false
+        })]}
       >
         <CarouselContent>
           {collections?.map((collection) => (
