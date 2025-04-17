@@ -1,7 +1,4 @@
 'use client'
-import { useParams } from 'next/navigation'
-import { useEffect, useMemo, useState } from 'react'
-
 import ProductCard from '@/components/product-card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCategoryQuery } from '@/hooks/categories'
@@ -21,8 +18,10 @@ import {
 } from '@headlessui/react'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { XMarkIcon } from '@heroicons/react/24/outline'
+import { useParams } from 'next/navigation'
+import { useEffect, useMemo, useState } from 'react'
 
-export default function Category() {
+const CategoryPage = () => {
   const { slug } = useParams<{ slug: string }>()
   const {
     data: category,
@@ -42,6 +41,24 @@ export default function Category() {
   const [sizeFilterOptions, setSizeFilterOptions] = useState<ProductSize[]>([])
   const [selectedColours, setSelectedColours] = useState<string[]>([])
   const [selectedSizes, setSelectedSizes] = useState<string[]>([])
+
+  const handleColourFilterChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value
+    setSelectedColours((prev) =>
+      prev.includes(value)
+        ? prev.filter((name) => name !== value)
+        : [...prev, value]
+    )
+  }
+
+  const handleSizeFilterChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
+    const value = e.target.value
+    setSelectedSizes((prev) =>
+      prev.includes(value)
+        ? prev.filter((name) => name !== value)
+        : [...prev, value]
+    )
+  }
 
   const filteredProducts = useMemo(() => {
     if (!products) return []
@@ -108,7 +125,7 @@ export default function Category() {
               <button
                 type="button"
                 onClick={() => setMobileFiltersOpen(false)}
-                className="-mr-2 flex size-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:outline-hidden"
+                className="-mr-2 flex size-10 items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-50 focus:ring-2 focus:ring-black outline-none focus:outline-hidden"
               >
                 <span className="sr-only">Close menu</span>
                 <XMarkIcon aria-hidden="true" className="size-6" />
@@ -127,7 +144,7 @@ export default function Category() {
                     <span className="ml-6 flex items-center">
                       <ChevronDownIcon
                         aria-hidden="true"
-                        className="size-5 rotate-0 transform group-data-open:-rotate-180"
+                        className="size-5 rotate-0 transform group-data-[open]:-rotate-180"
                       />
                     </span>
                   </DisclosureButton>
@@ -141,36 +158,29 @@ export default function Category() {
                             <input
                               id={`filter-mobile-sizes-${index}`}
                               type="checkbox"
-                              className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                              className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                               value={option.name}
                               checked={selectedColours.includes(option.name)}
-                              onChange={(e) => {
-                                const value = e.target.value
-                                setSelectedColours((prev) =>
-                                  prev.includes(value)
-                                    ? prev.filter((name) => name !== value)
-                                    : [...prev, value]
-                                )
-                              }}
+                              onChange={handleColourFilterChange}
                             />
                             <svg
                               fill="none"
                               viewBox="0 0 14 14"
-                              className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                              className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-[disabled]:stroke-gray-950/25"
                             >
                               <path
                                 d="M3 8L6 11L11 3.5"
                                 strokeWidth={2}
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                className="opacity-0 group-has-checked:opacity-100"
+                                className="opacity-0 group-has-[:checked]:opacity-100"
                               />
                               <path
                                 d="M3 7H11"
                                 strokeWidth={2}
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                className="opacity-0 group-has-indeterminate:opacity-100"
+                                className="opacity-0 group-has-[:indeterminate]:opacity-100"
                               />
                             </svg>
                           </div>
@@ -196,7 +206,7 @@ export default function Category() {
                     <span className="ml-6 flex items-center">
                       <ChevronDownIcon
                         aria-hidden="true"
-                        className="size-5 rotate-0 transform group-data-open:-rotate-180"
+                        className="size-5 rotate-0 transform group-data-[open]:-rotate-180"
                       />
                     </span>
                   </DisclosureButton>
@@ -210,17 +220,10 @@ export default function Category() {
                             <input
                               id={`filter-mobile-sizes-${index}`}
                               type="checkbox"
-                              className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-indigo-600 checked:bg-indigo-600 indeterminate:border-indigo-600 indeterminate:bg-indigo-600 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
+                              className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                               value={option.name}
                               checked={selectedSizes.includes(option.name)}
-                              onChange={(e) => {
-                                const value = e.target.value
-                                setSelectedSizes((prev) =>
-                                  prev.includes(value)
-                                    ? prev.filter((name) => name !== value)
-                                    : [...prev, value]
-                                )
-                              }}
+                              onChange={handleSizeFilterChange}
                             />
                             <svg
                               fill="none"
@@ -232,14 +235,14 @@ export default function Category() {
                                 strokeWidth={2}
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                className="opacity-0 group-has-checked:opacity-100"
+                                className="opacity-0 group-has-[:checked]:opacity-100"
                               />
                               <path
                                 d="M3 7H11"
                                 strokeWidth={2}
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
-                                className="opacity-0 group-has-indeterminate:opacity-100"
+                                className="opacity-0 group-has-[:indeterminate]:opacity-100"
                               />
                             </svg>
                           </div>
@@ -344,14 +347,7 @@ export default function Category() {
                                 className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                 value={option.name}
                                 checked={selectedColours.includes(option.name)}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  setSelectedColours((prev) =>
-                                    prev.includes(value)
-                                      ? prev.filter((name) => name !== value)
-                                      : [...prev, value]
-                                  )
-                                }}
+                                onChange={handleColourFilterChange}
                               />
                               <svg
                                 fill="none"
@@ -417,14 +413,7 @@ export default function Category() {
                                 className="col-start-1 row-start-1 appearance-none rounded-sm border border-gray-300 bg-white checked:border-black checked:bg-black indeterminate:border-black indeterminate:bg-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black disabled:border-gray-300 disabled:bg-gray-100 disabled:checked:bg-gray-100 forced-colors:appearance-auto"
                                 value={option.name}
                                 checked={selectedSizes.includes(option.name)}
-                                onChange={(e) => {
-                                  const value = e.target.value
-                                  setSelectedSizes((prev) =>
-                                    prev.includes(value)
-                                      ? prev.filter((name) => name !== value)
-                                      : [...prev, value]
-                                  )
-                                }}
+                                onChange={handleSizeFilterChange}
                               />
                               <svg
                                 fill="none"
@@ -532,3 +521,5 @@ export default function Category() {
     </div>
   )
 }
+
+export default CategoryPage

@@ -12,7 +12,7 @@ import {
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCategoriesQuery } from '@/hooks/categories'
 
-function CategoriesSection() {
+const CategoriesSection = () => {
   const { data: categories, isLoading, isError } = useCategoriesQuery()
 
   return (

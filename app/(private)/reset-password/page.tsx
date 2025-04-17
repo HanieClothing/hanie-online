@@ -4,9 +4,9 @@ import { SubmitButton } from "@/components/submit-button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
-export default async function ResetPassword(props: {
+const ResetPasswordPage = async (props: {
   searchParams: Promise<Message>;
-}) {
+}) => {
   const searchParams = await props.searchParams;
   return (
     <form className="flex flex-col w-full max-w-md p-4 gap-2 [&>input]:mb-4">
@@ -35,3 +35,5 @@ export default async function ResetPassword(props: {
     </form>
   );
 }
+
+export default ResetPasswordPage

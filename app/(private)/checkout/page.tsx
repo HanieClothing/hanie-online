@@ -392,7 +392,7 @@ export default function Example() {
                               aria-hidden="true"
                               className="absolute inset-0 top-0 mx-auto h-px max-w-7xl px-8"
                             >
-                              <div className="h-px w-full bg-transparent transition-colors duration-200 ease-out group-data-open:bg-gray-200" />
+                              <div className="h-px w-full bg-transparent transition-colors duration-200 ease-out group-data-[open]:bg-gray-200" />
                             </div>
 
                             <div className="relative">
@@ -782,11 +782,11 @@ export default function Example() {
                         </span>
                         <CheckCircleIcon
                           aria-hidden="true"
-                          className="size-5 text-indigo-600 group-not-data-checked:hidden"
+                          className="size-5 text-indigo-600 group-not-data-[checked]:hidden"
                         />
                         <span
                           aria-hidden="true"
-                          className="pointer-events-none absolute -inset-px rounded-lg border-2 border-transparent group-data-checked:border-indigo-500 group-data-focus:border"
+                          className="pointer-events-none absolute -inset-px rounded-lg border-2 border-transparent group-data-[checked]:border-indigo-500 group-data-[focus]:border"
                         />
                       </Radio>
                     ))}

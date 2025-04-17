@@ -2,7 +2,7 @@ import { getCollectionBySlug, getCollections } from '@/queries/collections'
 import { useQuery } from '@tanstack/react-query'
 import useSupabase from './supabase'
 
-export function useCollectionsQuery() {
+export const useCollectionsQuery = () => {
   const client = useSupabase()
   const queryKey = ['collections']
 
@@ -13,7 +13,7 @@ export function useCollectionsQuery() {
   return useQuery({ queryKey, queryFn })
 }
 
-export function useCollectionQuery(slug: string) {
+export const useCollectionQuery = (slug: string) => {
   const client = useSupabase()
   const queryKey = ['collection', slug]
 

@@ -3,7 +3,7 @@
 import { Skeleton } from '@/components/ui/skeleton'
 import { useCollectionsQuery } from '@/hooks/collections'
 
-function CollectionsSection() {
+const CollectionsSection = () => {
   const { data: collections, isLoading, isError } = useCollectionsQuery()
 
   return (

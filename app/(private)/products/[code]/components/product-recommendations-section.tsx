@@ -5,7 +5,7 @@ type Props = {
   code: string
 }
 
-function ProductRecommendationsSection({ code }: Props) {
+const ProductRecommendationsSection = ({ code }: Props) => {
   const { data: productRecommendations } = useProductRecommendationsQuery(code)
 
   if (!productRecommendations || productRecommendations.length <= 0)

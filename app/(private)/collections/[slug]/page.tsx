@@ -58,12 +58,12 @@ const filters = [
   },
 ]
 
-export default function Collection() {
-  const { slug } = useParams()
+const CollectionPage = () => {
+  const { slug } = useParams<{ slug: string }>()
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [products, setProducts] = useState<Product[] | null>(null)
 
-  const { data: collection } = useCollectionQuery(slug?.toString() ?? '')
+  const { data: collection } = useCollectionQuery(slug)
 
   return (
     <div>
@@ -111,7 +111,7 @@ export default function Collection() {
                       <span className="ml-6 flex items-center">
                         <ChevronDownIcon
                           aria-hidden="true"
-                          className="size-5 rotate-0 transform group-data-open:-rotate-180"
+                          className="size-5 rotate-0 transform group-data-[open]:-rotate-180"
                         />
                       </span>
                     </DisclosureButton>
@@ -139,14 +139,14 @@ export default function Collection() {
                                   strokeWidth={2}
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
-                                  className="opacity-0 group-has-checked:opacity-100"
+                                  className="opacity-0 group-has-[:checked]:opacity-100"
                                 />
                                 <path
                                   d="M3 7H11"
                                   strokeWidth={2}
                                   strokeLinecap="round"
                                   strokeLinejoin="round"
-                                  className="opacity-0 group-has-indeterminate:opacity-100"
+                                  className="opacity-0 group-has-[:indeterminate]:opacity-100"
                                 />
                               </svg>
                             </div>
@@ -268,21 +268,21 @@ export default function Collection() {
                                 <svg
                                   fill="none"
                                   viewBox="0 0 14 14"
-                                  className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-disabled:stroke-gray-950/25"
+                                  className="pointer-events-none col-start-1 row-start-1 size-3.5 self-center justify-self-center stroke-white group-has-[disabled]:stroke-gray-950/25"
                                 >
                                   <path
                                     d="M3 8L6 11L11 3.5"
                                     strokeWidth={2}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    className="opacity-0 group-has-checked:opacity-100"
+                                    className="opacity-0 group-has-[:checked]:opacity-100"
                                   />
                                   <path
                                     d="M3 7H11"
                                     strokeWidth={2}
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
-                                    className="opacity-0 group-has-indeterminate:opacity-100"
+                                    className="opacity-0 group-has-[:indeterminate]:opacity-100"
                                   />
                                 </svg>
                               </div>
@@ -366,3 +366,5 @@ export default function Collection() {
     </div>
   )
 }
+
+export default CollectionPage;

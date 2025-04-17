@@ -6,11 +6,11 @@ import Footer from '@/components/footer'
 import Header from '@/components/header'
 import { QueryProvider } from '@/providers/QueryProvider'
 
-export default function RootLayout({
+const RootLayout = ({
   children,
 }: Readonly<{
   children: React.ReactNode
-}>) {
+}>) => {
   return (
     <QueryProvider>
       <html lang="en" suppressHydrationWarning>
@@ -27,3 +27,5 @@ export default function RootLayout({
     </QueryProvider>
   )
 }
+
+export default RootLayout

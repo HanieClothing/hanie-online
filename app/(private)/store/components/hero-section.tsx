@@ -34,7 +34,7 @@ const HeroSection = () => {
                   className="absolute inset-0 overflow-hidden"
                 >
                   <img
-                    alt=""
+                    alt={`${collection?.name} collection banner image`}
                     src={collection.image_url}
                     className="size-full object-cover"
                   />

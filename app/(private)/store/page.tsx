@@ -3,7 +3,7 @@ import CollectionsSection from './components/collections-section'
 import HeroSection from './components/hero-section'
 import IncentivesSection from './components/incentives-section'
 
-export default function Store() {
+const StorePage = () => {
   return (
     <div className="bg-white">
       <HeroSection />
@@ -18,3 +18,5 @@ export default function Store() {
     </div>
   )
 }
+
+export default StorePage

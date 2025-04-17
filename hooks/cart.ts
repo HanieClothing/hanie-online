@@ -9,7 +9,7 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
 import useSupabase from './supabase'
 
-export function useCartItemsQuery() {
+export const useCartItemsQuery = () => {
   const client = useSupabase()
   const queryKey = ['cart_items']
 
@@ -20,7 +20,7 @@ export function useCartItemsQuery() {
   return useQuery({ queryKey, queryFn })
 }
 
-export function useAddCartItemMutation() {
+export const useAddCartItemMutation = () => {
   const client = useSupabase()
   const queryClient = useQueryClient()
 
@@ -38,7 +38,7 @@ export function useAddCartItemMutation() {
   })
 }
 
-export function useDeleteCartItemMutation() {
+export const useDeleteCartItemMutation = () => {
   const client = useSupabase()
   const queryClient = useQueryClient()
 
@@ -56,7 +56,7 @@ export function useDeleteCartItemMutation() {
   })
 }
 
-export function useUpdateCartItemQuantityMutation() {
+export const useUpdateCartItemQuantityMutation = () => {
   const client = useSupabase()
   const queryClient = useQueryClient()
 
@@ -82,7 +82,7 @@ export function useUpdateCartItemQuantityMutation() {
   })
 }
 
-export function useCartRecommendationsQuery() {
+export const useCartRecommendationsQuery = () => {
   const client = useSupabase()
   const queryKey = ['cart_recommendations']
 

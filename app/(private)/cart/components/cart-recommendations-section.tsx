@@ -1,7 +1,7 @@
 import ProductCard from '@/components/product-card'
 import { useCartRecommendationsQuery } from '@/hooks/cart'
 
-function CartRecommendationsSection() {
+const CartRecommendationsSection = () => {
   const { data: cartRecommendations } = useCartRecommendationsQuery()
 
   if (!cartRecommendations || cartRecommendations.length <= 0) return undefined

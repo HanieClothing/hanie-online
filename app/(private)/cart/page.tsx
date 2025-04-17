@@ -21,7 +21,7 @@ import {
 
 import CartRecommendationsSection from './components/cart-recommendations-section'
 
-export default function Cart() {
+const CartPage = () => {
   const { data: cartItems, isLoading, isError } = useCartItemsQuery()
   const deleteCartItemMutation = useDeleteCartItemMutation()
   const updateCartItemQuantityMutation = useUpdateCartItemQuantityMutation()
@@ -362,3 +362,5 @@ export default function Cart() {
     </div>
   )
 }
+
+export default CartPage;

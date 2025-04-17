@@ -1,10 +1,10 @@
 import { Client } from '@/utils/supabase/client'
 
-export function getCategories(client: Client) {
+export const getCategories = (client: Client) => {
   return client.from('categories').select('*').throwOnError()
 }
 
-export function getCategoryBySlug(client: Client, slug: string) {
+export const getCategoryBySlug = (client: Client, slug: string) => {
   return client
     .from('categories')
     .select('*')

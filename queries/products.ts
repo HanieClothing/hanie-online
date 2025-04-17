@@ -1,6 +1,6 @@
 import { Client } from '@/utils/supabase/client'
 
-export function getProductsByCategory(client: Client, categorySlug: string) {
+export const getProductsByCategory = (client: Client, categorySlug: string) => {
   return client
     .rpc('get_products_by_category', {
       category_slug: categorySlug,
@@ -8,7 +8,7 @@ export function getProductsByCategory(client: Client, categorySlug: string) {
     .throwOnError()
 }
 
-export function getProductVariantsByCode(client: Client, code: string) {
+export const getProductVariantsByCode = (client: Client, code: string) => {
   return client
     .rpc('get_product_variants_by_code', {
       product_code: code,
@@ -16,7 +16,7 @@ export function getProductVariantsByCode(client: Client, code: string) {
     .throwOnError()
 }
 
-export function getProductRecommendations(client: Client, productCode: string) {
+export const getProductRecommendations = (client: Client, productCode: string) => {
   return client
     .rpc('get_product_recommendations', {
       product_code: productCode,

@@ -20,7 +20,7 @@ import { PostgrestError } from '@supabase/supabase-js'
 
 import ProductRecommendationsSection from './components/product-recommendations-section'
 
-export default function Product() {
+const ProductPage = () => {
   const { code } = useParams<{ code: string }>()
   const { data: product, isLoading, isError } = useProductByCodeQuery(code)
   const addCartItemMutation = useAddCartItemMutation()
@@ -295,3 +295,5 @@ export default function Product() {
     </div>
   )
 }
+
+export default ProductPage

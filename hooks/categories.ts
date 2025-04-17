@@ -3,7 +3,7 @@ import { useQuery } from '@tanstack/react-query'
 
 import useSupabase from './supabase'
 
-export function useCategoriesQuery() {
+export const useCategoriesQuery = () => {
   const client = useSupabase()
   const queryKey = ['categories']
 
@@ -14,7 +14,7 @@ export function useCategoriesQuery() {
   return useQuery({ queryKey, queryFn })
 }
 
-export function useCategoryQuery(slug: string) {
+export const useCategoryQuery = (slug: string) => {
   const client = useSupabase()
   const queryKey = ['category', slug]
 

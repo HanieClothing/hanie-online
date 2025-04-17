@@ -7,7 +7,7 @@ import { ProductRecommendation, TransformedProduct } from '@/types/product'
 import { useQuery } from '@tanstack/react-query'
 import useSupabase from './supabase'
 
-export function useProductsByCategoryQuery(categorySlug: string) {
+export const useProductsByCategoryQuery = (categorySlug: string) => {
   const client = useSupabase()
   const queryKey = ['products_by_category']
 
@@ -20,7 +20,7 @@ export function useProductsByCategoryQuery(categorySlug: string) {
   return useQuery({ queryKey, queryFn })
 }
 
-export function useProductByCodeQuery(code: string) {
+export const useProductByCodeQuery = (code: string) => {
   const client = useSupabase()
   const queryKey = ['product_by_code']
 
@@ -94,7 +94,7 @@ export function useProductByCodeQuery(code: string) {
   return useQuery({ queryKey, queryFn })
 }
 
-export function useProductRecommendationsQuery(productCode: string) {
+export const useProductRecommendationsQuery = (productCode: string) => {
   const client = useSupabase()
   const queryKey = ['product_recommendations']
 

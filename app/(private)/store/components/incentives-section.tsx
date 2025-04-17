@@ -22,7 +22,7 @@ const incentives = [
   },
 ]
 
-function IncentivesSection() {
+const IncentivesSection = () => {
   return (
     <div className="bg-white">
       <div className="mx-auto max-w-7xl sm:px-2 lg:px-4 pt-24 sm:pt-32">

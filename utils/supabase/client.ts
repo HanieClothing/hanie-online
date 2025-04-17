@@ -5,7 +5,7 @@ import { SupabaseClient } from '@supabase/supabase-js'
 export type Client = SupabaseClient<Database>
 let client: Client | undefined
 
-export function getSupabaseBrowserClient() {
+export const getSupabaseBrowserClient = () => {
   if (client) return client
 
   client = createBrowserClient<Database>(
