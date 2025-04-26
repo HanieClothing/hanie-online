@@ -39,11 +39,6 @@ export const updateSession = async (request: NextRequest) => {
 
   // block unauthenticated users from accessing private routes
   const authRoutes = ['/sign-in']
-  const publicRoutes = [...authRoutes, '/forgot-password']
-
-  if (!isAuthenticated && !publicRoutes.includes(request.nextUrl.pathname)) {
-    return NextResponse.redirect(new URL('/sign-in', request.url))
-  }
 
   // block authenticated users from accessing auth pages
   if (isAuthenticated && authRoutes.includes(request.nextUrl.pathname)) {

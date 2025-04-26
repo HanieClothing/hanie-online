@@ -87,6 +87,30 @@ const CartPage = () => {
     updateCartItemQuantityMutation.mutate({ cartItemId, quantity })
   }
 
+  const handleCheckout: React.FormEventHandler<HTMLFormElement> = async (e) => {
+    e.preventDefault()
+
+    const response = await fetch('/api/checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ cartItems: selectedLocalCartItems })
+    })
+
+    if (!response.ok) {
+      console.error('Failed to checkout.')
+    }
+
+    const data = await response.json()
+
+    if (data.url) {
+      window.location.href = data.url
+    } else {
+      console.error('Checkout session creation failed', data.error)
+    }
+  }
+
   return (
     <div className="bg-white">
       <main className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
@@ -94,7 +118,7 @@ const CartPage = () => {
           Shopping Cart
         </h1>
 
-        <form className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
+        <form onSubmit={handleCheckout} className="mt-12 lg:grid lg:grid-cols-12 lg:items-start lg:gap-x-12 xl:gap-x-16">
           <section aria-labelledby="cart-heading" className="lg:col-span-7">
             <h2 id="cart-heading" className="sr-only">
               Items in your shopping cart
