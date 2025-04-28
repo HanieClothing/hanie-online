@@ -32,22 +32,25 @@ const IncentivesSection = () => {
               We built our business on customer service
             </h2>
           </div>
-          <div className="mt-16 grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-3">
+          <div className="mt-16 grid grid-cols-3 gap-x-8 gap-y-10">
             {incentives.map((incentive) => (
-              <div key={incentive.name} className="sm:flex lg:block">
+              <div key={incentive.name}>
                 <div className="sm:shrink-0 flex items-center justify-center">
                   <img alt="" src={incentive.imageSrc} className="size-16" />
                 </div>
-                <div className="mt-4 sm:ml-6 sm:mt-0 lg:ml-0 lg:mt-6 text-center">
+                <div className="mt-6 text-center">
                   <h3 className="text-sm font-medium text-gray-900">
                     {incentive.name}
                   </h3>
-                  <p className="mt-2 text-sm text-gray-500">
+                  <p className="hidden mt-2 text-sm text-gray-500 md:block">
                     {incentive.description}
                   </p>
                 </div>
               </div>
             ))}
+          </div>
+          <div className="mt-8">
+            <p className="text-center text-gray-500 text-sm">*With T&amp;C apply.</p>
           </div>
         </div>
       </div>
