@@ -18,7 +18,7 @@ const CategoriesSection = () => {
   return (
     <section
       aria-labelledby="category-heading"
-      className="pt-24 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8"
+      className="pt-12 sm:pt-32 xl:mx-auto xl:max-w-7xl xl:px-8"
     >
       <Carousel
         className="px-4 sm:px-6 lg:px-8 xl:px-0"
@@ -63,7 +63,7 @@ const CategoriesSection = () => {
               >
                 <Link
                   href={`/categories/${category.slug}`}
-                  className="relative flex h-80 flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"
+                  className="relative flex aspect-[3/4] flex-col overflow-hidden rounded-lg p-6 hover:opacity-75 xl:w-auto"
                 >
                   <span aria-hidden="true" className="absolute inset-0">
                     <img

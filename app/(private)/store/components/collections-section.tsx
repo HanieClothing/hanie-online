@@ -9,7 +9,7 @@ const CollectionsSection = () => {
   return (
     <section
       aria-labelledby="collection-heading"
-      className="mx-auto max-w-xl px-4 py-24 sm:px-6 sm:py-32 lg:max-w-7xl lg:px-8"
+      className="mx-auto max-w-xl px-4 py-12 sm:px-6 sm:py-32 lg:max-w-7xl lg:px-8"
     >
       <h2
         id="collection-heading"

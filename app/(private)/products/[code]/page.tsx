@@ -84,43 +84,9 @@ const ProductPage = () => {
   }
 
   return (
-    <div className="bg-white">
+    <div className="bg-white -mt-4">
       <main className="mx-auto mt-8 max-w-2xl px-4 pb-16 sm:px-6 sm:pb-24 lg:max-w-7xl lg:px-8">
         <div className="lg:grid lg:auto-rows-min lg:grid-cols-12 lg:gap-x-8">
-          <div className="lg:col-span-6 lg:col-start-7">
-            <div className="flex justify-between">
-              {isLoading && (
-                <>
-                  <Skeleton className="w-1/2 h-10" />
-                  <Skeleton className="w-1/4 h-6" />
-                </>
-              )}
-
-              {!isLoading && !isError && product && (
-                <>
-                  <h1 className="text-[30px] font-medium text-gray-900">
-                    {product.name}
-                  </h1>
-                  <div>
-                    <p
-                      className={cn(
-                        hasDiscount ? 'text-red-800' : 'text-black',
-                        'text-xl font-medium'
-                      )}
-                    >
-                      {formatToRM(product.sellingPrice)}
-                    </p>
-                    {hasDiscount && (
-                      <p className="text-sm text-right line-through text-gray-400">
-                        {formatToRM(product.originalPrice)}
-                      </p>
-                    )}
-                  </div>
-                </>
-              )}
-            </div>
-          </div>
-
           {/* Image gallery */}
           <div className="mt-8 lg:col-span-6 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
             <h2 className="sr-only">Images</h2>
@@ -160,7 +126,41 @@ const ProductPage = () => {
             </div>
           </div>
 
-          <div className="mt-8 lg:col-span-6">
+          <div className="mt-8 lg:col-span-6 lg:col-start-7">
+            <div className="flex justify-between">
+              {isLoading && (
+                <>
+                  <Skeleton className="w-1/2 h-10" />
+                  <Skeleton className="w-1/4 h-6" />
+                </>
+              )}
+
+              {!isLoading && !isError && product && (
+                <>
+                  <h1 className="text-2xl lg:text-[30px] font-medium text-gray-900">
+                    {product.name}
+                  </h1>
+                  <div>
+                    <p
+                      className={cn(
+                        hasDiscount ? 'text-red-800' : 'text-black',
+                        'text-lg lg:text-xl font-medium'
+                      )}
+                    >
+                      {formatToRM(product.sellingPrice)}
+                    </p>
+                    {hasDiscount && (
+                      <p className="text-sm text-right line-through text-gray-400">
+                        {formatToRM(product.originalPrice)}
+                      </p>
+                    )}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+
+          <div className="mt-4 lg:mt-8 lg:col-span-6">
             <form>
               {/* Colour picker */}
               <div>

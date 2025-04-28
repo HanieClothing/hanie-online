@@ -118,7 +118,7 @@ const CartPage = () => {
 
   return (
     <div className="bg-white">
-      <main className="mx-auto max-w-2xl px-4 pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
+      <main className="mx-auto max-w-2xl px-4 pt-4 lg:pt-16 pb-24 sm:px-6 lg:max-w-7xl lg:px-8">
         <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl">
           Shopping Cart
         </h1>
@@ -308,23 +308,23 @@ const CartPage = () => {
           {localCartItems && localCartItems.length > 0 && (
             <section
               aria-labelledby="summary-heading"
-              className="mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
+              className="sticky bottom-0 md:block mt-16 rounded-lg bg-gray-50 px-4 py-6 sm:p-6 lg:col-span-5 lg:mt-0 lg:p-8"
             >
               <h2
                 id="summary-heading"
-                className="text-lg font-medium text-gray-900"
+                className="hidden md:block text-lg font-medium text-gray-900"
               >
                 Order summary
               </h2>
 
               <dl className="mt-6 space-y-4">
-                <div className="flex items-center justify-between">
+                <div className="hidden md:flex items-center justify-between">
                   <dt className="text-sm text-gray-600">Subtotal</dt>
                   <dd className="text-sm font-medium text-gray-900">
                     {formatToRM(subtotal ?? 0)}
                   </dd>
                 </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                <div className="hidden md:flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex items-center text-sm text-gray-600">
                     <span>Shipping estimate</span>
                     <a
@@ -344,7 +344,7 @@ const CartPage = () => {
                     {formatToRM(shippingEstimate)}
                   </dd>
                 </div>
-                <div className="flex items-center justify-between border-t border-gray-200 pt-4">
+                <div className="hidden md:flex items-center justify-between border-t border-gray-200 pt-4">
                   <dt className="flex text-sm text-gray-600">
                     <span>Total Discount</span>
                     <a

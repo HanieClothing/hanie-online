@@ -32,11 +32,11 @@ function ProductCard({
       <img
         alt={'Product image'}
         src={imageUrl}
-        className="aspect-[3/4] w-full rounded-lg object-cover group-hover:opacity-75"
+        className="aspect-[3/4] rounded-lg object-cover group-hover:opacity-75"
       />
       <div className="mt-4 flex items-start justify-between text-base font-medium text-gray-900">
-        <div>
-          <h3>{name}</h3>
+        <div className='w-1/2 -space-y-1'>
+          <h3 className='truncate'>{name}</h3>
 
           <div>
             <h4 className="sr-only">Available colours</h4>
@@ -48,7 +48,7 @@ function ProductCard({
                 <li
                   key={colour.id}
                   style={{ backgroundColor: colour.hex_code }}
-                  className="size-4 rounded-full border border-black/10"
+                  className="size-[22px] rounded-full border border-black/10"
                 >
                   <span className="sr-only">{colour.name}</span>
                 </li>

@@ -46,16 +46,16 @@ const HeroSection = () => {
                 className="absolute inset-0 bg-black/50"
               />
 
-              <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-32 text-center sm:py-64 lg:px-0">
-                <h1 className="text-4xl font-bold tracking-tight text-white lg:text-6xl">
+              <div className="relative mx-auto flex max-w-3xl flex-col items-center px-6 py-12 text-center sm:py-64 lg:px-0">
+                <h1 className="text-2xl font-bold tracking-tight text-white lg:text-6xl">
                   {collection?.name}
                 </h1>
-                <p className="mt-4 text-xl text-white">
+                <p className="mt-2 lg:mt-4 text-sm lg:text-xl text-white">
                   {collection?.description}
                 </p>
                 <Link
                   href={`/collections/${collection?.slug}`}
-                  className="mt-8 inline-block rounded-md border border-transparent bg-white px-8 py-3 text-base font-medium text-gray-900 hover:bg-gray-100"
+                  className="mt-4 lg:mt-8 inline-block rounded-md border border-transparent bg-white py-1 px-4 lg:px-8 lg:py-3 text-sm lg:text-base font-medium text-gray-900 hover:bg-gray-100"
                 >
                   Shop Now
                 </Link>

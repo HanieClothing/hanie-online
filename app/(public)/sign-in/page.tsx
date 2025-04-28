@@ -9,7 +9,7 @@ export default async function Login(props: { searchParams: Promise<Message> }) {
   const searchParams = await props.searchParams;
 
   return (
-    <form className="flex flex-col flex-1 justify-center w-full">
+    <form className="flex flex-col flex-1 h-full justify-center w-full px-8">
       <h1 className="text-2xl font-medium">Sign in</h1>
       <p className="text-sm text-foreground">
         Don't have an account?{" "}

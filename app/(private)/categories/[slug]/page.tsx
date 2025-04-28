@@ -276,7 +276,7 @@ const CategoryPage = () => {
               <div className="relative">
                 {category.banner_image_url ? (
                   <img
-                    className="h-[500px] w-full object-cover"
+                    className="h-[250px] lg:h-[500px] w-full object-cover"
                     src={category.banner_image_url}
                   />
                 ) : (
@@ -286,10 +286,10 @@ const CategoryPage = () => {
                 <div className="bg-black/50 absolute inset-0" />
 
                 <div className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2">
-                  <h1 className="text-4xl font-bold text-center tracking-tight text-gray-100">
+                  <h1 className="text-xl lg:text-4xl font-bold text-center tracking-tight text-gray-100">
                     {category.name}
                   </h1>
-                  <p className="mx-auto mt-4 max-w-3xl text-center text-base text-gray-100">
+                  <p className="mx-auto mt-2 lg:mt-4 max-w-3xl text-center text-xs lg:text-base text-gray-100">
                     {category.description}
                   </p>
                 </div>
