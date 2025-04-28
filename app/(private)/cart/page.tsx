@@ -20,6 +20,8 @@ import {
 } from '@heroicons/react/20/solid'
 
 import CartRecommendationsSection from './components/cart-recommendations-section'
+import toast from 'react-hot-toast'
+import { XCircleIcon } from 'lucide-react'
 
 const CartPage = () => {
   const { data: cartItems, isLoading, isError } = useCartItemsQuery()
@@ -99,7 +101,10 @@ const CartPage = () => {
     })
 
     if (!response.ok) {
-      console.error('Failed to checkout.')
+      toast.error('Failed to checkout.', {
+        icon: <XCircleIcon fill="#000" className="text-white" />,
+      })
+      return
     }
 
     const data = await response.json()
