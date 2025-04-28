@@ -40,12 +40,16 @@ export const updateSession = async (request: NextRequest) => {
   // block unauthenticated users from accessing private routes
   const authRoutes = ['/sign-in']
 
-  // block authenticated users from accessing auth pages
-  if (isAuthenticated && authRoutes.includes(request.nextUrl.pathname)) {
+  if (!isAuthenticated && request.nextUrl.pathname === '/account') {
+    return NextResponse.redirect(new URL('/sign-in', request.url))
+  }
+
+  if (request.nextUrl.pathname === '/') {
     return NextResponse.redirect(new URL('/store', request.url))
   }
 
-  if (isAuthenticated && request.nextUrl.pathname === '/') {
+  // block authenticated users from accessing auth pages
+  if (isAuthenticated && authRoutes.includes(request.nextUrl.pathname)) {
     return NextResponse.redirect(new URL('/store', request.url))
   }
 

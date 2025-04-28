@@ -21,10 +21,10 @@ import {
 } from '@headlessui/react'
 import {
   Bars3Icon,
-  ChatBubbleLeftRightIcon,
   MagnifyingGlassIcon,
   ShoppingBagIcon,
   XMarkIcon,
+  UserIcon
 } from '@heroicons/react/24/outline'
 
 function Header() {
@@ -268,6 +268,17 @@ function Header() {
                   >
                     <span className="sr-only">Search</span>
                     <MagnifyingGlassIcon
+                      aria-hidden="true"
+                      className="size-6"
+                    />
+                  </Link>
+
+                  <Link
+                    href="/account"
+                    className="hidden text-sm font-medium text-gray-400 hover:text-gray-500 lg:block lg:ml-8"
+                  >
+                    <span className="sr-only">Account</span>
+                    <UserIcon
                       aria-hidden="true"
                       className="size-6"
                     />
